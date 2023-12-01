@@ -8,12 +8,13 @@ from bs4 import BeautifulSoup
 SESSION = os.environ.get('SESSION')
 
 
-def get_input(
-    day: int, year: Optional[int], test_index: Optional[int] = None
-) -> str:
+def get_input(day: int, year: Optional[int], test_index: Optional[int] = None) -> str:
     if test_index is not None:
         soup = BeautifulSoup(
-            requests.get(f'https://adventofcode.com/{year}/day/{day}', cookies=dict(session=SESSION)).text,
+            requests.get(
+                f'https://adventofcode.com/{year}/day/{day}',
+                cookies=dict(session=SESSION),
+            ).text,
             features='html.parser',
         )
         input_text = soup.find_all('pre')[test_index].text
