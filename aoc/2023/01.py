@@ -14,15 +14,13 @@ def calibration_value(line, digits):
         digit_map.get(word, word)
         for start in range(n)
         for end in range(start + 1, n + 1)
-        if (word := line[start:end])
-        if word in digits
+        if (word := line[start:end]) and word in digits
     )
     last_digit = next(
         digit_map.get(word, word)
         for start in range(n - 1, -1, -1)
         for end in range(start + 1, n + 1)
-        if (word := line[start:end])
-        if word in digits
+        if (word := line[start:end]) and word in digits
     )
     return int(first_digit + last_digit)
 
