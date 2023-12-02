@@ -5,8 +5,7 @@ from aoc.utils import get_input
 text = get_input(day=2, year=2023)
 required_cubes = []
 for line in text.splitlines():
-    game, cubes = line.split(':')
-    _, game_id = game.split()
+    _game, cubes = line.split(':')
     cube_values = dict(red=[], green=[], blue=[])
     for cube_set in cubes.split(';'):
         for cube_value in cube_set.split(','):
