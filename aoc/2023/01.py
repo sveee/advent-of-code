@@ -1,5 +1,3 @@
-from itertools import chain
-
 from aoc.utils import get_input
 
 text = get_input(day=1, year=2023)
@@ -28,7 +26,7 @@ def calibration_value(line, digits):
 print(sum(calibration_value(line, set(digit_map.values())) for line in lines))
 print(
     sum(
-        calibration_value(line, set(chain(digit_map.keys(), digit_map.values())))
+        calibration_value(line, set(digit_map.keys()) | set(digit_map.values()))
         for line in lines
     )
 )
