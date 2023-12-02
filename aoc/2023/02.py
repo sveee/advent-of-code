@@ -14,5 +14,5 @@ for line in text.splitlines():
             cube_values[color].append(int(value))
     required_cubes.append([max(values) for values in cube_values.values()])
 required_cubes = np.array(required_cubes)
-print(sum(np.where(np.all(required_cubes <= [12, 13, 14], axis=1))[0] + 1))
+print(sum(np.where((required_cubes <= [12, 13, 14]).all(axis=1))[0] + 1))
 print(np.prod(required_cubes, axis=1).sum())
