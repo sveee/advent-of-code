@@ -1,5 +1,5 @@
+import re
 from collections import defaultdict
-from dataclasses import dataclass
 
 from aoc.utils import get_input
 
@@ -10,76 +10,42 @@ n = len(grid)
 m = len(grid[0])
 
 
-def is_symbol(c):
-    return not c.isdigit() and c != '.'
+def symbol_neighbours_at(x, y):
+    symbol_neighbours = []
+    for dx in range(-1, 2):
+        for dy in range(-1, 2):
+            nx, ny = x + dx, y + dy
+            if (
+                0 <= nx < n
+                and 0 <= ny < m
+                and not grid[nx][ny].isdigit()
+                and grid[nx][ny] != '.'
+            ):
+                symbol_neighbours.append((nx, ny))
+    return symbol_neighbours
 
 
-@dataclass(frozen=True, eq=True)
-class Number:
-    x: int
-    y_start: int
-    y_end: int
-
-    @property
-    def value(self):
-        return int(grid[self.x][self.y_start : self.y_end])
-
-
-@dataclass(frozen=True, eq=True)
-class Symbol:
-    x: int
-    y: int
-
-    @property
-    def value(self):
-        return grid[self.x][self.y]
-
-
-def get_neighbouring_symbols(number: Number):
-    symbols = set()
-    for y in range(number.y_start, number.y_end):
-        for dx in range(-1, 2):
-            for dy in range(-1, 2):
-                if (dx, dy) == (0, 0):
-                    continue
-                nx = number.x + dx
-                ny = y + dy
-                if 0 <= nx < n and 0 <= ny < m and is_symbol(grid[nx][ny]):
-                    symbols.add(Symbol(nx, ny))
-    return symbols
-
-
-neighbouring_symbols = {}
+numbers_with_symbols = []
+gear_numbers = defaultdict(list)
 for x, line in enumerate(grid):
-    y = 0
-    while y < m:
-        y_start, y_end = y, y + 1
-        if line[y_start].isdigit():
-            while y_end != m and line[y_end].isdigit():
-                y_end += 1
-            number = Number(x, y_start, y_end)
-            neighbouring_symbols[number] = get_neighbouring_symbols(number)
-        y = y_end
+    for number_match in re.finditer('\d+', line):
+        symbols = {
+            symbol
+            for y in range(number_match.start(), number_match.end())
+            for symbol in symbol_neighbours_at(x, y)
+        }
+        number = int(number_match.group())
+        if symbols:
+            numbers_with_symbols.append(number)
+        for symbol in symbols:
+            if grid[symbol[0]][symbol[1]] == '*':
+                gear_numbers[symbol].append(number)
 
-
-neighboring_numbers = defaultdict(list)
-for number, symbols in neighbouring_symbols.items():
-    for symbol in symbols:
-        neighboring_numbers[symbol].append(number)
-
+print(sum(numbers_with_symbols))
 print(
     sum(
-        number.value
-        for number, neighborings in neighbouring_symbols.items()
-        if neighborings
-    )
-)
-print(
-    sum(
-        [
-            numbers[0].value * numbers[1].value
-            for symbol, numbers in neighboring_numbers.items()
-            if symbol.value == '*' and len(numbers) == 2
-        ]
+        numbers[0] * numbers[1]
+        for numbers in gear_numbers.values()
+        if len(numbers) == 2
     )
 )
