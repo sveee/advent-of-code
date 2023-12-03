@@ -37,9 +37,9 @@ for x, line in enumerate(grid):
         number = int(number_match.group())
         if symbols:
             numbers_with_symbols.append(number)
-        for symbol in symbols:
-            if grid[symbol[0]][symbol[1]] == '*':
-                gear_numbers[symbol].append(number)
+        for sx, sy in symbols:
+            if grid[sx][sy] == '*':
+                gear_numbers[(sx, sy)].append(number)
 
 print(sum(numbers_with_symbols))
 print(
