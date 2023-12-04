@@ -29,9 +29,6 @@ class Promblem2023_01(Problem):
 
     def solve_input(self, text):
         lines = text.splitlines()
-        digit_map = {
-            digit_str: str(value + 1) for value, digit_str in enumerate(digit_names)
-        }
         self.part1 = sum(
             self.calibration_value(line, set(digit_map.values())) for line in lines
         )
