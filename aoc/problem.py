@@ -48,7 +48,7 @@ def _get_test_answers(day: int, year: int):
     ]
 
 
-def _status_equal(value: Any, expected: Any):
+def _equal_status(value: Any, expected: Any):
     return (
         '\033[92m' + '\033[1m' + 'PASS' + '\033[0m'
         if expected == value
@@ -81,4 +81,4 @@ class Problem:
         test_answers = _get_test_answers(self.day, self.year)
         for answer, value in zip(test_answers, values):
             if value is not None:
-                print(_status_equal(str(value), answer))
+                print(_equal_status(str(value), answer))
