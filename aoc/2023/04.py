@@ -7,7 +7,7 @@ class Promblem2023_04(Problem):
         points = 0
         n_won_cards = [1] * len(cards)
         for i, line in enumerate(cards):
-            _game, numbers = line.split(':')
+            _id, numbers = line.split(':')
             winning, your = map(lambda x: set(x.strip().split()), numbers.split('|'))
             n_matches = len(winning & your)
             points += 2 ** (n_matches - 1) if n_matches > 0 else 0
