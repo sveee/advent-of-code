@@ -6,8 +6,8 @@ class Promblem2023_04(Problem):
         cards = text.splitlines()
         points = 0
         n_won_cards = [1] * len(cards)
-        for i, line in enumerate(cards):
-            _id, numbers = line.split(':')
+        for i, card in enumerate(cards):
+            _id, numbers = card.split(':')
             winning, your = map(lambda x: set(x.strip().split()), numbers.split('|'))
             n_matches = len(winning & your)
             points += 2 ** (n_matches - 1) if n_matches > 0 else 0
