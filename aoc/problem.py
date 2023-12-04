@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 SESSION = os.environ.get('SESSION')
 
 
-def get_full_input(day: int, year: int) -> str:
+def _get_full_input(day: int, year: int) -> str:
     input_text = requests.get(
         f'https://adventofcode.com/{year}/day/{day}/input',
         cookies=dict(session=SESSION),
@@ -19,7 +19,7 @@ def get_full_input(day: int, year: int) -> str:
     return input_text
 
 
-def get_test_input(day: int, year: int, test_index: int = 0) -> str:
+def _get_test_input(day: int, year: int, test_index: int = 0) -> str:
     soup = BeautifulSoup(
         requests.get(
             f'https://adventofcode.com/{year}/day/{day}',
@@ -33,7 +33,7 @@ def get_test_input(day: int, year: int, test_index: int = 0) -> str:
     return input_text
 
 
-def get_test_answers(day: int, year: int):
+def _get_test_answers(day: int, year: int):
     soup = BeautifulSoup(
         requests.get(
             f'https://adventofcode.com/{year}/day/{day}',
@@ -41,10 +41,14 @@ def get_test_answers(day: int, year: int):
         ).text,
         features='html.parser',
     )
-    return [em.text for code in soup.find_all('code') if (em := code.find('em'))]
+    parts = soup.find_all('article')
+    return [
+        [em.text for code in part.find_all('code') if (em := code.find('em'))][-1]
+        for part in parts
+    ]
 
 
-def _assert_equal(value: Any, expected: Any):
+def _status_equal(value: Any, expected: Any):
     return (
         '\033[92m' + '\033[1m' + 'PASS' + '\033[0m'
         if expected == value
@@ -65,18 +69,17 @@ class Problem:
         pass
 
     def solve(self) -> Tuple[Any, Any]:
-        self.solve_input(get_full_input(self.day, self.year))
+        self.solve_input(_get_full_input(self.day, self.year))
         print(self.part1)
         print(self.part2)
 
-    def test(self, test1_index: int = 0, test2_index: int = 0):
+    def test(self, test_index1: int = 0, test_index2: int = 0):
         values = []
-        self.solve_input(get_test_input(self.day, self.year, test1_index))
+        self.solve_input(_get_test_input(self.day, self.year, test_index1))
         values.append(self.part1)
-        self.solve_input(get_test_input(self.day, self.year, test2_index))
+        self.solve_input(_get_test_input(self.day, self.year, test_index2))
         values.append(self.part2)
-        test_answers = get_test_answers(self.day, self.year)
-
+        test_answers = _get_test_answers(self.day, self.year)
         for answer, value in zip(test_answers, values):
             if value is not None:
-                print(_assert_equal(str(value), answer))
+                print(_status_equal(str(value), answer))
