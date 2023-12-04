@@ -1,7 +1,7 @@
-from typing import Tuple, Any
+import os
 import re
 from abc import abstractmethod
-import os
+from typing import Any, List
 
 import requests
 from bs4 import BeautifulSoup
@@ -33,7 +33,7 @@ def _get_test_input(day: int, year: int, test_index: int = 0) -> str:
     return input_text
 
 
-def _get_test_answers(day: int, year: int):
+def _get_test_answers(day: int, year: int) -> List[str]:
     soup = BeautifulSoup(
         requests.get(
             f'https://adventofcode.com/{year}/day/{day}',
@@ -48,7 +48,7 @@ def _get_test_answers(day: int, year: int):
     ]
 
 
-def _equal_status(value: Any, expected: Any):
+def _equal_status(value: Any, expected: Any) -> str:
     return (
         '\033[92m' + '\033[1m' + 'PASS' + '\033[0m'
         if expected == value
@@ -67,7 +67,7 @@ class Problem:
     def solve_input(self, text: str) -> None:
         pass
 
-    def solve(self) -> Tuple[Any, Any]:
+    def solve(self) -> None:
         self.solve_input(_get_full_input(self.day, self.year))
         print(self.part1)
         print(self.part2)
