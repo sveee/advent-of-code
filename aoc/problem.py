@@ -61,8 +61,7 @@ class Problem:
         year, day = re.findall('\d+', self.__class__.__name__)
         self.year = int(year)
         self.day = int(day)
-        self.part1 = None
-        self.part2 = None
+        self.part1, self.part2 = None, None
 
     @abstractmethod
     def solve_input(self, text: str) -> None:
