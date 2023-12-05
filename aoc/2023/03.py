@@ -19,7 +19,7 @@ class Promblem2023_03(Problem):
                     symbol_neighbours.append((nx, ny))
         return symbol_neighbours
 
-    def solve_input(self, text):
+    def solve(self, text):
         grid = text.splitlines()
         n = len(grid)
         m = len(grid[0])
@@ -47,4 +47,4 @@ class Promblem2023_03(Problem):
         )
 
 
-Promblem2023_03().solve()
+Promblem2023_03().solve_full()

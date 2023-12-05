@@ -4,7 +4,7 @@ from aoc.problem import Problem
 
 
 class Promblem2023_02(Problem):
-    def solve_input(self, text):
+    def solve(self, text):
         required_cubes = []
         for line in text.splitlines():
             _game, cubes = line.split(':')
@@ -19,4 +19,4 @@ class Promblem2023_02(Problem):
         self.part2 = np.prod(required_cubes, axis=1).sum()
 
 
-Promblem2023_02().solve()
+Promblem2023_02().solve_full()

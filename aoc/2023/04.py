@@ -2,7 +2,7 @@ from aoc.problem import Problem
 
 
 class Promblem2023_04(Problem):
-    def solve_input(self, text):
+    def solve(self, text):
         cards = text.splitlines()
         points = 0
         n_won_cards = [1] * len(cards)
@@ -17,4 +17,4 @@ class Promblem2023_04(Problem):
         self.part2 = sum(n_won_cards)
 
 
-Promblem2023_04().solve()
+Promblem2023_04().solve_full()

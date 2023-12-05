@@ -27,7 +27,7 @@ class Promblem2023_01(Problem):
         )
         return int(first_digit + last_digit)
 
-    def solve_input(self, text):
+    def solve(self, text):
         lines = text.splitlines()
         self.part1 = sum(
             self.calibration_value(line, set(digit_map.values())) for line in lines
@@ -40,4 +40,4 @@ class Promblem2023_01(Problem):
         )
 
 
-Promblem2023_01().solve()
+Promblem2023_01().solve_full()
