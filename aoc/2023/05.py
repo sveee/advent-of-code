@@ -71,7 +71,6 @@ class Promblem2023_05(Problem):
             ]
             for segment_map_set in segment_map_sets
         ]
-
         segments1 = map_segment_sets(
             [Segment(seed, seed) for seed in seeds], segment_map_sets
         )
