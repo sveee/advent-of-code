@@ -1,7 +1,7 @@
 import os
 import re
 from abc import abstractmethod
-from typing import Any, List
+from typing import Any, List, Dict
 
 import requests
 from bs4 import BeautifulSoup
@@ -9,21 +9,30 @@ from bs4 import BeautifulSoup
 SESSION = os.environ.get('SESSION')
 
 
+def get_request(url: str) -> str:
+    return requests.get(
+        url,
+        cookies=dict(session=SESSION),
+    ).text
+
+
+def post_request(url: str, data: Dict[str, Any]) -> str:
+    return requests.post(
+        url,
+        data=data,
+        cookies=dict(session=SESSION),
+    ).text
+
+
 def _get_problem_soup(year: int, day: int) -> str:
     return BeautifulSoup(
-        requests.get(
-            f'https://adventofcode.com/{year}/day/{day}',
-            cookies=dict(session=SESSION),
-        ).text,
+        get_request(f'https://adventofcode.com/{year}/day/{day}'),
         features='html.parser',
     )
 
 
 def _get_full_input(year: int, day: int) -> str:
-    input_text = requests.get(
-        f'https://adventofcode.com/{year}/day/{day}/input',
-        cookies=dict(session=SESSION),
-    ).text
+    input_text = get_request(f'https://adventofcode.com/{year}/day/{day}/input')
     if input_text.endswith('\n'):
         input_text = input_text[:-1]
     return input_text
@@ -61,20 +70,21 @@ class Problem:
         self.part1, self.part2 = None, None
 
     @abstractmethod
-    def solve_input(self, text: str) -> None:
+    def solve(self, text: str) -> None:
         pass
 
-    def solve(self) -> None:
-        self.solve_input(_get_full_input(self.year, self.day))
+    def solve_full(self) -> None:
+        self.solve(_get_full_input(self.year, self.day))
         print(self.part1)
         print(self.part2)
 
-    def test(self, test_index1: int = 0, test_index2: int = 0):
+    def check_test(self, test_index1: int = 0, test_index2: int = 0):
+        # TODO: refactor
         values = []
-        self.solve_input(_get_test_input(self.year, self.day, test_index1))
+        self.solve(_get_test_input(self.year, self.day, test_index1))
         values.append(self.part1)
         if self.part2 is not None:
-            self.solve_input(_get_test_input(self.year, self.day, test_index2))
+            self.solve(_get_test_input(self.year, self.day, test_index2))
             values.append(self.part2)
         test_answers = _get_test_answers(self.year, self.day)
         for answer, value in zip(test_answers, values):
@@ -87,21 +97,18 @@ class Problem:
         if n_parts_solved >= 2:
             print('Problem already solved!')
             return
-
-        self.solve()
+        self.solve_full()
         answer = self.part1 if n_parts_solved == 0 else self.part2
         if answer is None:
             return
-
         soup = BeautifulSoup(
-            requests.post(
+            post_request(
                 f'https://adventofcode.com/{self.year}/day/{self.day}/answer',
-                data=dict(
+                dict(
                     level=n_parts_solved + 1,
                     answer=answer,
                 ),
-                cookies=dict(session=SESSION),
-            ).text,
+            ),
             features='html.parser',
         )
         print(re.sub('\s+', ' ', soup.find('article').text))
