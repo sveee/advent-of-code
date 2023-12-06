@@ -40,4 +40,4 @@ class Promblem2023_01(Problem):
         )
 
 
-Promblem2023_01().solve_full()
+Promblem2023_01().print_solution()

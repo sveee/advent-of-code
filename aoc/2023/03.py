@@ -47,4 +47,4 @@ class Promblem2023_03(Problem):
         )
 
 
-Promblem2023_03().solve_full()
+Promblem2023_03().print_solution()

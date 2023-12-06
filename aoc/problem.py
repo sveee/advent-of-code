@@ -73,7 +73,7 @@ class Problem:
     def solve(self, text: str) -> None:
         pass
 
-    def solve_full(self) -> None:
+    def print_solution(self) -> None:
         self.solve(_get_full_input(self.year, self.day))
         print(self.part1)
         print(self.part2)

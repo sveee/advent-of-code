@@ -17,4 +17,4 @@ class Promblem2023_04(Problem):
         self.part2 = sum(n_won_cards)
 
 
-Promblem2023_04().solve_full()
+Promblem2023_04().print_solution()

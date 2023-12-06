@@ -19,4 +19,4 @@ class Promblem2023_02(Problem):
         self.part2 = np.prod(required_cubes, axis=1).sum()
 
 
-Promblem2023_02().solve_full()
+Promblem2023_02().print_solution()

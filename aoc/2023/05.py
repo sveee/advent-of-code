@@ -85,4 +85,4 @@ class Promblem2023_05(Problem):
         self.part2 = min(segment.start for segment in segments2)
 
 
-Promblem2023_05().solve_full()
+Promblem2023_05().print_solution()
