@@ -6,7 +6,7 @@ from aoc.problem import Problem
 
 def n_ways_to_win(time, distance):
     D = math.sqrt(time * time - 4 * distance)
-    x1, x2 = round((time - D) / 2, 9), round((time + D) / 2, 9)
+    x1, x2 = (time - D) / 2, (time + D) / 2
     answer = math.floor(x2) - math.ceil(x1) + 1
     if x1 == math.ceil(x1):
         # If x1 is an integer, then x2 is also an integer. Follows from Vieta's formulas.
