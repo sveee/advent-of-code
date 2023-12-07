@@ -1,5 +1,4 @@
 from collections import Counter
-from enum import Enum
 from itertools import product
 
 from aoc.problem import Problem
