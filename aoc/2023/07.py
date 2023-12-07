@@ -21,7 +21,7 @@ card_map2 = {
 all_cards = list(map(str, range(2, 10))) + list(card_map1.keys())
 
 
-counts_map = {
+counts_to_type_map = {
     (5,): 6,             # Five of a kind
     (1, 4): 5,           # Four of a kind
     (2, 3): 4,           # Full house
@@ -37,7 +37,7 @@ def hand_values(hand, card_map):
 
 
 def hand_type(values):
-    return counts_map[tuple(sorted(Counter(values).values()))]
+    return counts_to_type_map[tuple(sorted(Counter(values).values()))]
 
 
 def hand_key1(hand):
