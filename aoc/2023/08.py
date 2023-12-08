@@ -21,12 +21,16 @@ def lcm(numbers):
     return result
 
 
+def next_node(node, instruction, graph):
+    return graph[node][0 if instruction == 'L' else 1]
+
+
 def find_cycle_size(node, graph, instructions):
     current_index, total_index = 0, 0
     while True:
         if node.endswith('Z'):
             return total_index
-        node = graph[node][0 if instructions[current_index] == 'L' else 1]
+        node = next_node(node, instructions[current_index], graph)
         current_index += 1
         total_index += 1
         if current_index >= len(instructions):
@@ -47,11 +51,13 @@ class Promblem2023_08(Problem):
         for instuction in cycle(instructions):
             if node == 'ZZZ':
                 break
-            node = graph[node][0 if instuction == 'L' else 1]
+            node = next_node(node, instuction, graph)
             n_steps += 1
         self.part1 = n_steps
-        nodes = [node for node in graph if node.endswith('A')]
-        self.part2 = lcm([find_cycle_size(node, graph, instructions) for node in nodes])
+        a_nodes = [node for node in graph if node.endswith('A')]
+        self.part2 = lcm(
+            [find_cycle_size(node, graph, instructions) for node in a_nodes]
+        )
 
 
 Promblem2023_08().print_solution()
