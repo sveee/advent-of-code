@@ -4,14 +4,14 @@ from itertools import cycle
 from aoc.problem import Problem
 
 
-def gcd(x, y):
+def gcd2(x, y):
     while y:
         x, y = y, x % y
     return x
 
 
 def lcm2(x, y):
-    return (x * y) // gcd(x, y)
+    return (x * y) // gcd2(x, y)
 
 
 def lcm(numbers):
@@ -43,15 +43,15 @@ class Promblem2023_08(Problem):
 
         graph = {}
         for line in network.splitlines():
-            start, *destination = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
-            graph[start] = destination
+            start, *destinations = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
+            graph[start] = destinations
 
         node = 'AAA'
         n_steps = 0
-        for instuction in cycle(instructions):
+        for instruction in cycle(instructions):
             if node == 'ZZZ':
                 break
-            node = next_node(node, instuction, graph)
+            node = next_node(node, instruction, graph)
             n_steps += 1
         self.part1 = n_steps
         a_nodes = [node for node in graph if node.endswith('A')]
