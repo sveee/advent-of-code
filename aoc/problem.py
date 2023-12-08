@@ -6,13 +6,13 @@ from typing import Any, List, Dict
 import requests
 from bs4 import BeautifulSoup
 
-SESSION = os.environ.get('SESSION')
+AOC_SESSION = os.environ['AOC_SESSION']
 
 
 def get_request(url: str) -> str:
     return requests.get(
         url,
-        cookies=dict(session=SESSION),
+        cookies=dict(session=AOC_SESSION),
     ).text
 
 
@@ -20,7 +20,7 @@ def post_request(url: str, data: Dict[str, Any]) -> str:
     return requests.post(
         url,
         data=data,
-        cookies=dict(session=SESSION),
+        cookies=dict(session=AOC_SESSION),
     ).text
 
 
@@ -97,7 +97,7 @@ class Problem:
         if n_parts_solved >= 2:
             print('Problem already solved!')
             return
-        self.solve_full()
+        self.solve(_get_full_input(self.year, self.day))
         answer = self.part1 if n_parts_solved == 0 else self.part2
         if answer is None:
             return
