@@ -16,21 +16,18 @@ def lcm2(x, y):
 
 def lcm(numbers):
     result = numbers[0]
-    for i in range(1, len(numbers)):
-        result = lcm2(result, numbers[i])
+    for number in numbers[1:]:
+        result = lcm2(result, number)
     return result
 
 
 def find_cycle_size(node, graph, instructions):
-    current_index, total_index = 0, 0
+    index = 0
     while True:
         if node.endswith('Z'):
-            return total_index
-        node = graph[node][0 if instructions[current_index] == 'L' else 1]
-        current_index += 1
-        total_index += 1
-        if current_index >= len(instructions):
-            current_index = 0
+            return index
+        node = graph[node][0 if instructions[index % len(instructions)] == 'L' else 1]
+        index += 1
 
 
 class Promblem2023_08(Problem):
