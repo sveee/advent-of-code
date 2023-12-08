@@ -34,8 +34,8 @@ class Promblem2023_08(Problem):
         instructions, network = text.split('\n\n')
         graph = {}
         for line in network.splitlines():
-            start, *destinations = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
-            graph[start] = destinations
+            source, *destinations = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
+            graph[source] = destinations
         self.part1 = find_cycle_size('AAA', graph, instructions)
         self.part2 = lcm(
             [
