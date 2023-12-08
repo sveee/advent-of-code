@@ -1,5 +1,4 @@
 import re
-from itertools import cycle
 
 from aoc.problem import Problem
 
