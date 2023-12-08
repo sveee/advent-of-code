@@ -21,16 +21,12 @@ def lcm(numbers):
     return result
 
 
-def next_node(node, instruction, graph):
-    return graph[node][0 if instruction == 'L' else 1]
-
-
 def find_cycle_size(node, graph, instructions):
     current_index, total_index = 0, 0
     while True:
         if node.endswith('Z'):
             return total_index
-        node = next_node(node, instructions[current_index], graph)
+        node = graph[node][0 if instructions[current_index] == 'L' else 1]
         current_index += 1
         total_index += 1
         if current_index >= len(instructions):
@@ -40,23 +36,16 @@ def find_cycle_size(node, graph, instructions):
 class Promblem2023_08(Problem):
     def solve(self, text):
         instructions, network = text.split('\n\n')
-
         graph = {}
         for line in network.splitlines():
             start, *destinations = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
             graph[start] = destinations
-
-        node = 'AAA'
-        n_steps = 0
-        for instruction in cycle(instructions):
-            if node == 'ZZZ':
-                break
-            node = next_node(node, instruction, graph)
-            n_steps += 1
-        self.part1 = n_steps
-        a_nodes = [node for node in graph if node.endswith('A')]
+        self.part1 = find_cycle_size('AAA', graph, instructions)
         self.part2 = lcm(
-            [find_cycle_size(node, graph, instructions) for node in a_nodes]
+            [
+                find_cycle_size(node, graph, instructions)
+                for node in [node for node in graph if node.endswith('A')]
+            ]
         )
 
 
