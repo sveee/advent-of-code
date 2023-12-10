@@ -67,29 +67,32 @@ class Problem:
     def __init__(self) -> None:
         year, day = re.findall('\d+', self.__class__.__name__)
         self.year, self.day = int(year), int(day)
-        self.part1, self.part2 = None, None
 
     @abstractmethod
-    def solve(self, text: str) -> None:
+    def part1(self, text: str) -> Any:
+        pass
+
+    @abstractmethod
+    def part2(self, text: str) -> Any:
         pass
 
     def print_solution(self) -> None:
-        self.solve(_get_full_input(self.year, self.day))
-        print(self.part1)
-        print(self.part2)
+        full_input = _get_full_input(self.year, self.day)
+        print(f'Part1: {self.part1(full_input)}')
+        print(f'Part2: {self.part2(full_input)}')
 
-    def check_test(self, test_index1: int = 0, test_index2: int = 0):
-        # TODO: refactor
-        values = []
-        self.solve(_get_test_input(self.year, self.day, test_index1))
-        values.append(self.part1)
-        if self.part2 is not None:
-            self.solve(_get_test_input(self.year, self.day, test_index2))
-            values.append(self.part2)
-        test_answers = _get_test_answers(self.year, self.day)
-        for answer, value in zip(test_answers, values):
-            if value is not None:
-                print(_equal_status(str(value), answer))
+    # def check_test(self, test_index1: int = 0, test_index2: int = 0):
+    #     # TODO: refactor
+    #     values = []
+    #     self.solve(_get_test_input(self.year, self.day, test_index1))
+    #     values.append(self.part1)
+    #     if self.part2 is not None:
+    #         self.solve(_get_test_input(self.year, self.day, test_index2))
+    #         values.append(self.part2)
+    #     test_answers = _get_test_answers(self.year, self.day)
+    #     for answer, value in zip(test_answers, values):
+    #         if value is not None:
+    #             print(_equal_status(str(value), answer))
 
     def submit(self) -> None:
         soup = _get_problem_soup(self.year, self.day)
@@ -97,8 +100,8 @@ class Problem:
         if n_parts_solved >= 2:
             print('Problem already solved!')
             return
-        self.solve(_get_full_input(self.year, self.day))
-        answer = self.part1 if n_parts_solved == 0 else self.part2
+        full_input = _get_full_input(self.year, self.day)
+        answer = str(self.part1(full_input)) if n_parts_solved == 0 else str(self.part2(full_input))
         if answer is None:
             return
         soup = BeautifulSoup(

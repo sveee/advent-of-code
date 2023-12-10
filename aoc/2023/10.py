@@ -135,14 +135,16 @@ def find_enclosed_tiles(grid):
 
 
 class Promblem2023_10(Problem):
-    def solve(self, text):
+    def part1(self, text):
+        grid = text.splitlines()
+        return get_max_pipe_distance(grid)
+
+    def part2(self, text):
         grid = text.splitlines()
         pipe = get_pipe(grid)
-        doubled_grid = get_doubled_grid(pipe, grid)
-        self.part1 = get_max_pipe_distance(grid)
-        self.part2 = sum(
+        return sum(
             1
-            for tile in find_enclosed_tiles(doubled_grid)
+            for tile in find_enclosed_tiles(get_doubled_grid(pipe, grid))
             if tile[0] % 2 == 1 and tile[1] % 2 == 1
         )
 
