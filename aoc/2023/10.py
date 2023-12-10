@@ -20,6 +20,12 @@ direction_vectors = {
     'west': (0, -1),
     'east': (0, 1),
 }
+opposite_direction = {
+    'north': 'south',
+    'south': 'north',
+    'west': 'east',
+    'east': 'west',
+}
 
 
 def get_neighbours(node, grid):
@@ -28,7 +34,12 @@ def get_neighbours(node, grid):
     for direction in allowed_directions[grid[x][y]]:
         dx, dy = direction_vectors[direction]
         nx, ny = x + dx, y + dy
-        if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and grid[nx][ny] != '.':
+        if (
+            0 <= nx < len(grid)
+            and 0 <= ny < len(grid[0])
+            and grid[nx][ny] != '.'
+            and opposite_direction[direction] in allowed_directions[grid[nx][ny]]
+        ):
             neighbours.append((nx, ny))
     return neighbours
 
