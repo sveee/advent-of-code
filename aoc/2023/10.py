@@ -1,14 +1,17 @@
 from aoc.problem import Problem
 from collections import deque
+import sys
+
+sys.setrecursionlimit(50000)
 
 allowed_directions = {
-    '|': {'north', 'south'},
-    '-': {'east', 'west'},
-    'L': {'north', 'east'},
-    'J': {'north', 'west'},
-    '7': {'south', 'west'},
-    'F': {'south', 'east'},
-    'S': {'north', 'south', 'east', 'west'},
+    '|': ['north', 'south'],
+    '-': ['east', 'west'],
+    'L': ['north', 'east'],
+    'J': ['north', 'west'],
+    '7': ['south', 'west'],
+    'F': ['south', 'east'],
+    'S': ['north', 'south', 'east', 'west'],
 }
 
 direction_vectors = {
@@ -25,7 +28,7 @@ def get_neighbours(node, grid):
     for direction in allowed_directions[grid[x][y]]:
         dx, dy = direction_vectors[direction]
         nx, ny = x + dx, y + dy
-        if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
+        if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]) and grid[nx][ny] != '.':
             neighbours.append((nx, ny))
     return neighbours
 
@@ -48,24 +51,22 @@ def get_max_pipe_distance(grid):
     return max(distance.values())
 
 
-def get_ordered_pipe(pipe, grid):
-    start = next(
-        (x, y)
-        for x in range(len(grid))
-        for y in range(len(grid[0]))
-        if grid[x][y] == 'S'
-    )
-    ordered_pipe = [start]
-    while True:
-        node = ordered_pipe[-1]
-        added = False
-        for next_node in get_neighbours(node, grid):
-            if next_node in pipe and next_node not in ordered_pipe:
-                ordered_pipe.append(next_node)
-                added = True
-                break
-        if not added:
-            return ordered_pipe
+def get_pipe_rec(tile, current_path, visited, start, grid):
+    if tile == start and len(current_path) > 2:
+        return current_path
+
+    if tile in visited:
+        return
+
+    current_path.append(tile)
+    visited.add(tile)
+    for next_tile in get_neighbours(tile, grid):
+        if (
+            path := get_pipe_rec(next_tile, current_path, visited, start, grid)
+        ) is not None:
+            return path
+    current_path.pop()
+    visited.pop(tile)
 
 
 def get_pipe(grid):
@@ -75,25 +76,10 @@ def get_pipe(grid):
         for y in range(len(grid[0]))
         if grid[x][y] == 'S'
     )
-    stack = [(start, None)]
-    previous = {}
-    while len(stack) > 0:
-        node, prev_node = stack.pop()
-        previous[node] = prev_node
-        for next_node in get_neighbours(node, grid):
-            if next_node == start and prev_node != start:
-                pipe_node = node
-                pipe = []
-                while pipe_node != start:
-                    pipe.append(pipe_node)
-                    pipe_node = previous[pipe_node]
-                pipe.append(start)
-                return pipe[::-1]
-            if next_node not in previous and grid[next_node[0]][next_node[1]] != '.':
-                stack.append((next_node, node))
+    return get_pipe_rec(start, [], set(), start, grid)
 
 
-def extend_grid(pipe, grid):
+def get_doubled_grid(pipe, grid):
     double_grid = [
         ['.' for _y in range(2 * len(grid[0]) + 1)] for _x in range(2 * len(grid) + 1)
     ]
@@ -106,7 +92,7 @@ def extend_grid(pipe, grid):
             nx, ny = pipe[index + 1]
         dx, dy = nx - x, ny - y
         double_grid[2 * x + 1 + dx][2 * y + 1 + dy] = '|' if dx != 0 else '-'
-    return double_grid
+    return [''.join(line) for line in double_grid]
 
 
 def find_enclosed_tiles(grid):
@@ -141,7 +127,7 @@ class Promblem2023_10(Problem):
     def solve(self, text):
         grid = text.splitlines()
         pipe = get_pipe(grid)
-        doubled_grid = extend_grid(pipe, grid)
+        doubled_grid = get_doubled_grid(pipe, grid)
         self.part1 = get_max_pipe_distance(grid)
         self.part2 = sum(
             1
