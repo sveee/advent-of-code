@@ -3,20 +3,24 @@ import numpy as np
 from aoc.problem import Problem
 
 
-class Promblem2023_02(Problem):
-    def solve(self, text):
-        required_cubes = []
-        for line in text.splitlines():
-            _game, cubes = line.split(':')
-            cube_values = dict(red=[], green=[], blue=[])
-            for cube_set in cubes.split(';'):
-                for cube_value in cube_set.split(','):
-                    value, color = cube_value.split()
-                    cube_values[color].append(int(value))
-            required_cubes.append([max(values) for values in cube_values.values()])
-        required_cubes = np.array(required_cubes)
-        self.part1 = sum(np.where((required_cubes <= [12, 13, 14]).all(axis=1))[0] + 1)
-        self.part2 = np.prod(required_cubes, axis=1).sum()
+def get_required_cubes(text):
+    required_cubes = []
+    for line in text.splitlines():
+        _game, cubes = line.split(':')
+        cube_values = dict(red=[], green=[], blue=[])
+        for cube_set in cubes.split(';'):
+            for cube_value in cube_set.split(','):
+                value, color = cube_value.split()
+                cube_values[color].append(int(value))
+        required_cubes.append([max(values) for values in cube_values.values()])
+    return np.array(required_cubes)
 
 
-Promblem2023_02().print_solution()
+class Problem2023_02(Problem):
+    def part1(self, text):
+        required_cubes = get_required_cubes(text)
+        return sum(np.where((required_cubes <= [12, 13, 14]).all(axis=1))[0] + 1)
+
+    def part2(self, text):
+        required_cubes = get_required_cubes(text)
+        return np.prod(required_cubes, axis=1).sum()

@@ -140,7 +140,6 @@ height_per_n_rocks = {}
 prev_match = None
 pattern = None
 for instruction in cycle(jet_pattern):
-
     if instruction == '<':
         current_rock.move_left(tower)
     else:

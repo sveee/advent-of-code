@@ -47,7 +47,6 @@ def move(node, steps, length):
 
 
 def find(value, node):
-
     if node.value == value:
         return node
 

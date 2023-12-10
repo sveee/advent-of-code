@@ -6,6 +6,7 @@ from functools import reduce
 from typing import List, Set
 
 from tqdm import tqdm
+
 from aoc.utils import get_input
 
 text = get_input(day=19, year=2022)
@@ -64,7 +65,6 @@ class SearchParameters:
 
 
 def find_max_geodes(time, resources, robots, parameters, cache):
-
     state = (time, resources, robots)
     if state in cache:
         return cache[state]

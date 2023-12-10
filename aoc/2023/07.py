@@ -21,12 +21,12 @@ all_cards = list(map(str, range(2, 10))) + list(card_map1.keys())
 
 
 counts_to_type_map = {
-    (5,): 6,             # Five of a kind
-    (1, 4): 5,           # Four of a kind
-    (2, 3): 4,           # Full house
-    (1, 1, 3): 3,        # Three of a kind
-    (1, 2, 2): 2,        # Two pair
-    (1, 1, 1, 2): 1,     # One pair
+    (5,): 6,  # Five of a kind
+    (1, 4): 5,  # Four of a kind
+    (2, 3): 4,  # Full house
+    (1, 1, 3): 3,  # Three of a kind
+    (1, 2, 2): 2,  # Two pair
+    (1, 1, 1, 2): 1,  # One pair
     (1, 1, 1, 1, 1): 0,  # High card
 }
 
@@ -54,17 +54,13 @@ def hand_key2(hand):
     return max_type, hand_values(hand, card_map2)
 
 
-class Promblem2023_07(Problem):
-    def solve(self, text):
+class Problem2023_07(Problem):
+    def part1(self, text):
         hands = [line.split() for line in text.splitlines()]
-        hands1 = sorted(hands, key=lambda x: hand_key1(x[0]))
-        hands2 = sorted(hands, key=lambda x: hand_key2(x[0]))
-        self.part1 = sum(
-            (index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands1)
-        )
-        self.part2 = sum(
-            (index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands2)
-        )
+        hands = sorted(hands, key=lambda x: hand_key1(x[0]))
+        return sum((index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands))
 
-
-Promblem2023_07().print_solution()
+    def part2(self, text):
+        hands = [line.split() for line in text.splitlines()]
+        hands = sorted(hands, key=lambda x: hand_key2(x[0]))
+        return sum((index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands))

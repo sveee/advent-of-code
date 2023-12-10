@@ -29,7 +29,6 @@ class GridSize(NamedTuple):
 
 
 def move(position, direction, grid_size):
-
     x = position[0] + direction[0]
     y = position[1] + direction[1]
     if x == 0:

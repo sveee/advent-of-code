@@ -10,15 +10,15 @@ def extrapolate_value(sequence, do_last):
     return sequence[-1] + prev if do_last else sequence[0] - prev
 
 
-class Promblem2023_09(Problem):
-    def solve(self, text):
+class Problem2023_09(Problem):
+    def part1(self, text):
         sequences = [list(map(int, line.split())) for line in text.splitlines()]
-        self.part1 = sum(
+        return sum(
             [extrapolate_value(sequence, do_last=True) for sequence in sequences]
         )
-        self.part2 = sum(
+
+    def part2(self, text):
+        sequences = [list(map(int, line.split())) for line in text.splitlines()]
+        return sum(
             [extrapolate_value(sequence, do_last=False) for sequence in sequences]
         )
-
-
-Promblem2023_09().print_solution()

@@ -3,6 +3,15 @@ import re
 from aoc.problem import Problem
 
 
+def read_input(text):
+    instructions, network = text.split('\n\n')
+    graph = {}
+    for line in network.splitlines():
+        source, *destinations = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
+        graph[source] = destinations
+    return graph, instructions
+
+
 def gcd2(x, y):
     while y:
         x, y = y, x % y
@@ -29,20 +38,16 @@ def find_cycle_size(node, graph, instructions):
         index += 1
 
 
-class Promblem2023_08(Problem):
-    def solve(self, text):
-        instructions, network = text.split('\n\n')
-        graph = {}
-        for line in network.splitlines():
-            source, *destinations = re.search('(\w+) = \((\w+), (\w+)\)', line).groups()
-            graph[source] = destinations
-        self.part1 = find_cycle_size('AAA', graph, instructions)
-        self.part2 = lcm(
+class Problem2023_08(Problem):
+    def part1(self, text):
+        graph, instructions = read_input(text)
+        return find_cycle_size('AAA', graph, instructions)
+
+    def part2(self, text):
+        graph, instructions = read_input(text)
+        return lcm(
             [
                 find_cycle_size(node, graph, instructions)
                 for node in [node for node in graph if node.endswith('A')]
             ]
         )
-
-
-Promblem2023_08().print_solution()

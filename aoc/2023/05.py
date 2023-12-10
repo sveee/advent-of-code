@@ -60,29 +60,34 @@ def map_segment_sets(segments, segment_map_sets):
     return segments
 
 
-class Promblem2023_05(Problem):
-    def solve(self, text):
-        seeds, *segment_map_sets = text.split('\n\n')
-        seeds = list(map(int, seeds.split(':')[1].strip().split()))
-        segment_map_sets = [
-            [
-                SegmentMap.from_str(segment_map)
-                for segment_map in segment_map_set.split(':')[1].strip().splitlines()
-            ]
-            for segment_map_set in segment_map_sets
+def read_input(text):
+    seeds, *segment_map_sets = text.split('\n\n')
+    seeds = list(map(int, seeds.split(':')[1].strip().split()))
+    segment_map_sets = [
+        [
+            SegmentMap.from_str(segment_map)
+            for segment_map in segment_map_set.split(':')[1].strip().splitlines()
         ]
-        segments1 = map_segment_sets(
+        for segment_map_set in segment_map_sets
+    ]
+    return seeds, segment_map_sets
+
+
+class Problem2023_05(Problem):
+    def part1(self, text):
+        seeds, segment_map_sets = read_input(text)
+        segments = map_segment_sets(
             [Segment(seed, seed) for seed in seeds], segment_map_sets
         )
-        segments2 = map_segment_sets(
+        return min(segment.start for segment in segments)
+
+    def part2(self, text):
+        seeds, segment_map_sets = read_input(text)
+        segments = map_segment_sets(
             [
                 Segment(start, start + length - 1)
                 for start, length in zip(seeds[::2], seeds[1::2])
             ],
             segment_map_sets,
         )
-        self.part1 = min(segment.start for segment in segments1)
-        self.part2 = min(segment.start for segment in segments2)
-
-
-Promblem2023_05().print_solution()
+        return min(segment.start for segment in segments)

@@ -4,6 +4,7 @@ from itertools import chain, combinations
 from typing import Set
 
 from tqdm.auto import tqdm
+
 from aoc.utils import get_input
 
 text = get_input(day=16, year=2022)

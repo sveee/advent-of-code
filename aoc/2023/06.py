@@ -14,19 +14,21 @@ def n_ways_to_win(time, distance):
     return answer
 
 
-class Promblem2023_06(Problem):
-    def solve(self, text):
+class Problem2023_06(Problem):
+    def part1(self, text):
         times, distances = map(
             lambda x: list(map(int, x.split(':')[1].split())), text.splitlines()
         )
-        self.part1 = reduce(
+        return reduce(
             lambda x, y: x * y,
             [n_ways_to_win(time, distance) for time, distance in zip(times, distances)],
         )
-        self.part2 = n_ways_to_win(
+
+    def part2(self, text):
+        times, distances = map(
+            lambda x: list(map(int, x.split(':')[1].split())), text.splitlines()
+        )
+        return n_ways_to_win(
             int(''.join(map(str, times))),
             int(''.join(map(str, distances))),
         )
-
-
-Promblem2023_06().print_solution()
