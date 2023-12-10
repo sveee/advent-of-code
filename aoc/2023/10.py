@@ -151,9 +151,3 @@ class Promblem2023_10(Problem):
 
 
 Promblem2023_10().print_solution()
-
-# print(
-#     len(
-#         '777FJ.F|-|FFF-L-J7.7.F-7--L-7-L-LF-7-FFF.FLF7.FL7-J77F-7.L7-7.-F77F|FLJ7.L---7.7---J77F|.F|-J7FFF|7-F7-77.FF7|-7-F77F-.J7.777FF|F|-F77|-77.F'
-#     )
-# )
