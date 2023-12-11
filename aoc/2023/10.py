@@ -42,14 +42,17 @@ def get_neighbours(node, grid):
             neighbours.append((nx, ny))
     return neighbours
 
-
-def get_max_pipe_distance(grid):
-    start = next(
+def get_start(grid):
+    return next(
         (x, y)
         for x in range(len(grid))
         for y in range(len(grid[0]))
         if grid[x][y] == 'S'
     )
+
+
+def get_max_pipe_distance(grid):
+    start = get_start(grid)
     queue = deque([start])
     distance = {start: 0}
     while len(queue) > 0:
@@ -61,32 +64,20 @@ def get_max_pipe_distance(grid):
     return max(distance.values())
 
 
-def get_pipe_rec(tile, current_path, visited, start, grid):
-    if tile == start and len(current_path) > 2:
-        return current_path
-
-    if tile in visited:
-        return
-
-    current_path.append(tile)
-    visited.add(tile)
-    for next_tile in get_neighbours(tile, grid):
-        if (
-            path := get_pipe_rec(next_tile, current_path, visited, start, grid)
-        ) is not None:
-            return path
-    current_path.pop()
-    visited.pop(tile)
-
-
-def get_pipe(grid):
-    start = next(
-        (x, y)
-        for x in range(len(grid))
-        for y in range(len(grid[0]))
-        if grid[x][y] == 'S'
-    )
-    return get_pipe_rec(start, [], set(), start, grid)
+def get_ordered_pipe(grid):
+    start = get_start(grid)
+    current_node = start
+    visited = set([start])
+    pipe = []
+    while True:
+        pipe.append(current_node)
+        for next_node in get_neighbours(current_node, grid):
+            if next_node == start and len(pipe) > 2:
+                return pipe
+            if next_node not in visited:
+                current_node = next_node
+                visited.add(next_node)
+                break
 
 
 def get_doubled_grid(pipe, grid):
@@ -140,7 +131,7 @@ def part1(text):
 
 def part2(text):
     grid = text.splitlines()
-    pipe = get_pipe(grid)
+    pipe = get_ordered_pipe(grid)
     return sum(
         1
         for tile in find_enclosed_tiles(get_doubled_grid(pipe, grid))
