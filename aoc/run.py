@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from enum import Enum
 from importlib import import_module
-from typing import Any, Callable
+from typing import Any, Callable, Dict
 
 import click
 import yaml
@@ -27,13 +27,17 @@ def _equal_status(generated: Any, expected: Any) -> str:
     )
 
 
-def submit(solution_funcs: Callable[[Solution], Any], year: int, day: int) -> None:
+def submit(
+    solution_funcs: Dict[Solution, Callable[[Solution], Any]], year: int, day: int
+) -> None:
     soup = get_problem_soup(year, day)
     n_parts_solved = len(re.findall('Your puzzle answer was', soup.text))
+    full_input = get_full_input(year, day)
     if n_parts_solved >= 2:
         print('Problem already solved!')
+        for part, solution_func in solution_funcs.items():
+            print(f'{part.value}:', solution_func(full_input))
         return
-    full_input = get_full_input(year, day)
     answer = (
         str(solution_funcs[Solution.PART1](full_input))
         if n_parts_solved == 0
