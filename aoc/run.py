@@ -1,17 +1,22 @@
 import os
 import re
 from datetime import datetime
+from enum import Enum
 from importlib import import_module
-from typing import Any
+from typing import Any, Callable
 
 import click
 import yaml
 from bs4 import BeautifulSoup
 
 from aoc.api import get_full_input, get_problem_soup, post_request
-from aoc.problem import Problem
 
 now = datetime.now()
+
+
+class Solution(Enum):
+    PART1 = 'part1'
+    PART2 = 'part2'
 
 
 def _equal_status(generated: Any, expected: Any) -> str:
@@ -22,7 +27,7 @@ def _equal_status(generated: Any, expected: Any) -> str:
     )
 
 
-def submit(problem: Problem, year: int, day: int) -> None:
+def submit(solution_funcs: Callable[[Solution], Any], year: int, day: int) -> None:
     soup = get_problem_soup(year, day)
     n_parts_solved = len(re.findall('Your puzzle answer was', soup.text))
     if n_parts_solved >= 2:
@@ -30,9 +35,9 @@ def submit(problem: Problem, year: int, day: int) -> None:
         return
     full_input = get_full_input(year, day)
     answer = (
-        str(problem.part1(full_input))
+        str(solution_funcs[Solution.PART1](full_input))
         if n_parts_solved == 0
-        else str(problem.part2(full_input))
+        else str(solution_funcs[Solution.PART2](full_input))
     )
     if answer is None:
         return
@@ -54,26 +59,30 @@ def submit(problem: Problem, year: int, day: int) -> None:
 @click.option('--day', '-d', default=now.day)
 def main(year: int, day: int) -> None:
     problem_module = import_module(f'aoc.{year}.{day:02d}')
-    problem = getattr(problem_module, f'Problem{year}_{day:02d}')()
     test_config_path = f'{os.path.dirname(__file__)}/{year}/tests/{day:02d}.yml'
     with open(test_config_path) as f:
         test_data = yaml.safe_load(f)
 
+    solution_funcs = {}
+    for part in Solution:
+        solution_funcs[part] = getattr(problem_module, part.value)
+
     all_tests_pass = True
-    for part in ['part1', 'part2']:
-        if part in test_data:
-            print(part)
-            for test_index, test_case in enumerate(test_data[part]):
+    for part in Solution:
+        if part.value in test_data:
+            print(part.value)
+            for test_index, test_case in enumerate(test_data[part.value]):
                 text_input, excepted = test_case.pop('input'), str(
                     test_case.pop('answer')
                 )
                 parameters = test_case
-                generated = str(getattr(problem, part)(text_input, **parameters))
+                generated = str(solution_funcs[part](text_input, **parameters))
                 print(f'test{test_index}:', _equal_status(generated, excepted))
+                assert generated == excepted
                 all_tests_pass &= generated == excepted
 
     if all_tests_pass:
-        submit(problem, year, day)
+        submit(solution_funcs, year, day)
 
 
 if __name__ == '__main__':

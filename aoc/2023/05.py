@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from aoc.problem import Problem
-
 
 @dataclass
 class Segment:
@@ -73,21 +71,21 @@ def read_input(text):
     return seeds, segment_map_sets
 
 
-class Problem2023_05(Problem):
-    def part1(self, text):
-        seeds, segment_map_sets = read_input(text)
-        segments = map_segment_sets(
-            [Segment(seed, seed) for seed in seeds], segment_map_sets
-        )
-        return min(segment.start for segment in segments)
+def part1(text):
+    seeds, segment_map_sets = read_input(text)
+    segments = map_segment_sets(
+        [Segment(seed, seed) for seed in seeds], segment_map_sets
+    )
+    return min(segment.start for segment in segments)
 
-    def part2(self, text):
-        seeds, segment_map_sets = read_input(text)
-        segments = map_segment_sets(
-            [
-                Segment(start, start + length - 1)
-                for start, length in zip(seeds[::2], seeds[1::2])
-            ],
-            segment_map_sets,
-        )
-        return min(segment.start for segment in segments)
+
+def part2(text):
+    seeds, segment_map_sets = read_input(text)
+    segments = map_segment_sets(
+        [
+            Segment(start, start + length - 1)
+            for start, length in zip(seeds[::2], seeds[1::2])
+        ],
+        segment_map_sets,
+    )
+    return min(segment.start for segment in segments)

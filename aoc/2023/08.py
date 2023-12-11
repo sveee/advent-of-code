@@ -1,7 +1,5 @@
 import re
 
-from aoc.problem import Problem
-
 
 def read_input(text):
     instructions, network = text.split('\n\n')
@@ -38,16 +36,16 @@ def find_cycle_size(node, graph, instructions):
         index += 1
 
 
-class Problem2023_08(Problem):
-    def part1(self, text):
-        graph, instructions = read_input(text)
-        return find_cycle_size('AAA', graph, instructions)
+def part1(text):
+    graph, instructions = read_input(text)
+    return find_cycle_size('AAA', graph, instructions)
 
-    def part2(self, text):
-        graph, instructions = read_input(text)
-        return lcm(
-            [
-                find_cycle_size(node, graph, instructions)
-                for node in [node for node in graph if node.endswith('A')]
-            ]
-        )
+
+def part2(text):
+    graph, instructions = read_input(text)
+    return lcm(
+        [
+            find_cycle_size(node, graph, instructions)
+            for node in [node for node in graph if node.endswith('A')]
+        ]
+    )

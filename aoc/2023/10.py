@@ -1,8 +1,6 @@
 import sys
 from collections import deque
 
-from aoc.problem import Problem
-
 sys.setrecursionlimit(50000)
 
 allowed_directions = {
@@ -135,16 +133,16 @@ def find_enclosed_tiles(grid):
     return [node for node, component_id in visited.items() if component_id > 1]
 
 
-class Problem2023_10(Problem):
-    def part1(self, text):
-        grid = text.splitlines()
-        return get_max_pipe_distance(grid)
+def part1(text):
+    grid = text.splitlines()
+    return get_max_pipe_distance(grid)
 
-    def part2(self, text):
-        grid = text.splitlines()
-        pipe = get_pipe(grid)
-        return sum(
-            1
-            for tile in find_enclosed_tiles(get_doubled_grid(pipe, grid))
-            if tile[0] % 2 == 1 and tile[1] % 2 == 1
-        )
+
+def part2(text):
+    grid = text.splitlines()
+    pipe = get_pipe(grid)
+    return sum(
+        1
+        for tile in find_enclosed_tiles(get_doubled_grid(pipe, grid))
+        if tile[0] % 2 == 1 and tile[1] % 2 == 1
+    )

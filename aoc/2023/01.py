@@ -1,7 +1,3 @@
-from typing import Any
-
-from aoc.problem import Problem
-
 digit_names = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 digit_map = {digit_str: str(value + 1) for value, digit_str in enumerate(digit_names)}
 
@@ -29,14 +25,14 @@ def calibration_value(line, digits):
     return int(first_digit + last_digit)
 
 
-class Problem2023_01(Problem):
-    def part1(self, text):
-        lines = text.splitlines()
-        return sum(calibration_value(line, set(digit_map.values())) for line in lines)
+def part1(text):
+    lines = text.splitlines()
+    return sum(calibration_value(line, set(digit_map.values())) for line in lines)
 
-    def part2(self, text):
-        lines = text.splitlines()
-        return sum(
-            calibration_value(line, set(digit_map.keys()) | set(digit_map.values()))
-            for line in lines
-        )
+
+def part2(text):
+    lines = text.splitlines()
+    return sum(
+        calibration_value(line, set(digit_map.keys()) | set(digit_map.values()))
+        for line in lines
+    )

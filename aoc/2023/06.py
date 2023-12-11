@@ -1,8 +1,6 @@
 import math
 from functools import reduce
 
-from aoc.problem import Problem
-
 
 def n_ways_to_win(time, distance):
     D = math.sqrt(time * time - 4 * distance)
@@ -14,21 +12,21 @@ def n_ways_to_win(time, distance):
     return answer
 
 
-class Problem2023_06(Problem):
-    def part1(self, text):
-        times, distances = map(
-            lambda x: list(map(int, x.split(':')[1].split())), text.splitlines()
-        )
-        return reduce(
-            lambda x, y: x * y,
-            [n_ways_to_win(time, distance) for time, distance in zip(times, distances)],
-        )
+def part1(text):
+    times, distances = map(
+        lambda x: list(map(int, x.split(':')[1].split())), text.splitlines()
+    )
+    return reduce(
+        lambda x, y: x * y,
+        [n_ways_to_win(time, distance) for time, distance in zip(times, distances)],
+    )
 
-    def part2(self, text):
-        times, distances = map(
-            lambda x: list(map(int, x.split(':')[1].split())), text.splitlines()
-        )
-        return n_ways_to_win(
-            int(''.join(map(str, times))),
-            int(''.join(map(str, distances))),
-        )
+
+def part2(text):
+    times, distances = map(
+        lambda x: list(map(int, x.split(':')[1].split())), text.splitlines()
+    )
+    return n_ways_to_win(
+        int(''.join(map(str, times))),
+        int(''.join(map(str, distances))),
+    )

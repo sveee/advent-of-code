@@ -1,7 +1,5 @@
 import numpy as np
 
-from aoc.problem import Problem
-
 
 def get_required_cubes(text):
     required_cubes = []
@@ -16,11 +14,11 @@ def get_required_cubes(text):
     return np.array(required_cubes)
 
 
-class Problem2023_02(Problem):
-    def part1(self, text):
-        required_cubes = get_required_cubes(text)
-        return sum(np.where((required_cubes <= [12, 13, 14]).all(axis=1))[0] + 1)
+def part1(text):
+    required_cubes = get_required_cubes(text)
+    return sum(np.where((required_cubes <= [12, 13, 14]).all(axis=1))[0] + 1)
 
-    def part2(self, text):
-        required_cubes = get_required_cubes(text)
-        return np.prod(required_cubes, axis=1).sum()
+
+def part2(text):
+    required_cubes = get_required_cubes(text)
+    return np.prod(required_cubes, axis=1).sum()

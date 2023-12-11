@@ -1,6 +1,3 @@
-from aoc.problem import Problem
-
-
 def get_empty_rows(grid):
     return {
         row_index
@@ -40,11 +37,11 @@ def get_total_distance(grid, scale):
     return total_distance
 
 
-class Problem2023_11(Problem):
-    def part1(self, text):
-        grid = text.splitlines()
-        return get_total_distance(grid, 2)
+def part1(text):
+    grid = text.splitlines()
+    return get_total_distance(grid, 2)
 
-    def part2(self, text, scale=1_000_000):
-        grid = text.splitlines()
-        return get_total_distance(grid, scale)
+
+def part2(text, scale=1_000_000):
+    grid = text.splitlines()
+    return get_total_distance(grid, scale)

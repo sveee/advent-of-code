@@ -1,8 +1,6 @@
 import re
 from collections import defaultdict
 
-from aoc.problem import Problem
-
 
 def symbol_neighbours_at(x, y, n, m, grid):
     symbol_neighbours = []
@@ -19,43 +17,43 @@ def symbol_neighbours_at(x, y, n, m, grid):
     return symbol_neighbours
 
 
-class Problem2023_03(Problem):
-    def part1(self, text):
-        grid = text.splitlines()
-        n = len(grid)
-        m = len(grid[0])
-        numbers_with_symbols = []
-        for x, line in enumerate(grid):
-            for number_match in re.finditer('\d+', line):
-                symbols = {
-                    symbol
-                    for y in range(number_match.start(), number_match.end())
-                    for symbol in symbol_neighbours_at(x, y, n, m, grid)
-                }
-                number = int(number_match.group())
-                if symbols:
-                    numbers_with_symbols.append(number)
+def part1(text):
+    grid = text.splitlines()
+    n = len(grid)
+    m = len(grid[0])
+    numbers_with_symbols = []
+    for x, line in enumerate(grid):
+        for number_match in re.finditer('\d+', line):
+            symbols = {
+                symbol
+                for y in range(number_match.start(), number_match.end())
+                for symbol in symbol_neighbours_at(x, y, n, m, grid)
+            }
+            number = int(number_match.group())
+            if symbols:
+                numbers_with_symbols.append(number)
 
-        return sum(numbers_with_symbols)
+    return sum(numbers_with_symbols)
 
-    def part2(self, text):
-        grid = text.splitlines()
-        n = len(grid)
-        m = len(grid[0])
-        gear_numbers = defaultdict(list)
-        for x, line in enumerate(grid):
-            for number_match in re.finditer('\d+', line):
-                symbols = {
-                    symbol
-                    for y in range(number_match.start(), number_match.end())
-                    for symbol in symbol_neighbours_at(x, y, n, m, grid)
-                }
-                number = int(number_match.group())
-                for sx, sy in symbols:
-                    if grid[sx][sy] == '*':
-                        gear_numbers[(sx, sy)].append(number)
-        return sum(
-            numbers[0] * numbers[1]
-            for numbers in gear_numbers.values()
-            if len(numbers) == 2
-        )
+
+def part2(text):
+    grid = text.splitlines()
+    n = len(grid)
+    m = len(grid[0])
+    gear_numbers = defaultdict(list)
+    for x, line in enumerate(grid):
+        for number_match in re.finditer('\d+', line):
+            symbols = {
+                symbol
+                for y in range(number_match.start(), number_match.end())
+                for symbol in symbol_neighbours_at(x, y, n, m, grid)
+            }
+            number = int(number_match.group())
+            for sx, sy in symbols:
+                if grid[sx][sy] == '*':
+                    gear_numbers[(sx, sy)].append(number)
+    return sum(
+        numbers[0] * numbers[1]
+        for numbers in gear_numbers.values()
+        if len(numbers) == 2
+    )

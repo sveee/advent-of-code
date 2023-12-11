@@ -1,8 +1,6 @@
 from collections import Counter
 from itertools import product
 
-from aoc.problem import Problem
-
 card_map1 = {
     'T': 10,
     'J': 11,
@@ -54,13 +52,13 @@ def hand_key2(hand):
     return max_type, hand_values(hand, card_map2)
 
 
-class Problem2023_07(Problem):
-    def part1(self, text):
-        hands = [line.split() for line in text.splitlines()]
-        hands = sorted(hands, key=lambda x: hand_key1(x[0]))
-        return sum((index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands))
+def part1(text):
+    hands = [line.split() for line in text.splitlines()]
+    hands = sorted(hands, key=lambda x: hand_key1(x[0]))
+    return sum((index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands))
 
-    def part2(self, text):
-        hands = [line.split() for line in text.splitlines()]
-        hands = sorted(hands, key=lambda x: hand_key2(x[0]))
-        return sum((index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands))
+
+def part2(text):
+    hands = [line.split() for line in text.splitlines()]
+    hands = sorted(hands, key=lambda x: hand_key2(x[0]))
+    return sum((index + 1) * int(bit) for index, (_hand, bit) in enumerate(hands))
