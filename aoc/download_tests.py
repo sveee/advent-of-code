@@ -18,15 +18,18 @@ class TestCase:
 def get_tests(year: int, day: int) -> List[TestCase]:
     soup = get_problem_soup(year, day)
     parts = soup.find_all('article')
-    # assert len(parts) == 2
     test_cases = []
     for part in parts:
-        text = soup.find_all('pre')[0].text
+        pres = part.find_all('pre')
+        if len(pres) == 0:
+            pres = soup.find_all('pre')
+        text = pres[0].text
         if text.endswith('\n'):
             text = text[:-1]
-        answer = [em.text for code in part.find_all('code') if (em := code.find('em'))][
-            -1
-        ]
+        codes = part.find_all('code')
+        if len(codes) == 0:
+            codes = soup.find_all('code')
+        answer = [em.text for code in codes if (em := code.find('em'))][-1]
         test_cases.append(TestCase(text, answer))
     return test_cases
 
