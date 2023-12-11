@@ -18,12 +18,12 @@ def get_empty_columns(grid):
 
 
 def get_total_distance(grid, scale):
-    galaxies = []
-    for x in range(len(grid)):
-        for y in range(len(grid[0])):
-            if grid[x][y] == '#':
-                galaxies.append((x, y))
-
+    galaxies = [
+        (x, y)
+        for x in range(len(grid))
+        for y in range(len(grid[0]))
+        if grid[x][y] == '#'
+    ]
     empty_rows = get_empty_rows(grid)
     empty_columns = get_empty_columns(grid)
     total_distance = 0
