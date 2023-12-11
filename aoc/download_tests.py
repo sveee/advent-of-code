@@ -18,7 +18,7 @@ class TestCase:
 def get_tests(year: int, day: int) -> List[TestCase]:
     soup = get_problem_soup(year, day)
     parts = soup.find_all('article')
-    assert len(parts) == 2
+    # assert len(parts) == 2
     test_cases = []
     for part in parts:
         text = soup.find_all('pre')[0].text
@@ -58,7 +58,7 @@ def main(year: int, day: int):
     if 'part1' not in test_data:
         test_data['part1'] = [asdict(test_cases[0])]
         modified = True
-    if 'part2' not in test_data:
+    if 'part2' not in test_data and len(test_cases) > 1:
         test_data['part2'] = [asdict(test_cases[1])]
         modified = True
 
