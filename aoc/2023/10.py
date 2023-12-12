@@ -42,6 +42,7 @@ def get_neighbours(node, grid):
             neighbours.append((nx, ny))
     return neighbours
 
+
 def get_start(grid):
     return next(
         (x, y)
