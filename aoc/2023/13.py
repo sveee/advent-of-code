@@ -1,43 +1,64 @@
-def get_n_rows(grid):
-    n_rows = len(grid)
+def horizontal_differences(grid):
+    n_rows, n_columns = len(grid), len(grid[0])
+    differences_per_row = {}
     for ri in range(1, n_rows):
-        is_perfect_reflection = True
+        n_differences = 0
         for k in range(max(ri, n_rows - ri)):
             if 0 <= ri - k - 1 < n_rows and 0 <= ri + k < n_rows:
-                if grid[ri - k - 1] != grid[ri + k]:
-                    is_perfect_reflection = False
-        if is_perfect_reflection:
-            return ri
-    return 0
+                for ci in range(n_columns):
+                    n_differences += grid[ri - k - 1][ci] != grid[ri + k][ci]
+        differences_per_row[ri] = n_differences
+    return differences_per_row
 
 
-def get_n_columns(grid):
-    n_columns = len(grid[0])
+def vertical_differences(grid):
+    n_rows, n_columns = len(grid), len(grid[0])
+    differences_per_column = {}
     for ci in range(1, n_columns):
-        is_perfect_reflection = True
+        n_differences = 0
         for k in range(max(ci, n_columns - ci)):
-            # print(ci - k - 1, ci + k)
             if 0 <= ci - k - 1 < n_columns and 0 <= ci + k < n_columns:
-                # print([grid[ri][ci - k - 1] for ri in range(len(grid))])
-                # print([grid[ri][ci + k] for ri in range(len(grid))])
-                if [grid[ri][ci - k - 1] for ri in range(len(grid))] != [
-                    grid[ri][ci + k] for ri in range(len(grid))
-                ]:
-                    is_perfect_reflection = False
-                    # break
-        if is_perfect_reflection:
-            return ci
-    return 0
+                for ri in range(n_rows):
+                    n_differences += grid[ri][ci - k - 1] != grid[ri][ci + k]
+        differences_per_column[ci] = n_differences
+    return differences_per_column
+
+
+def get_grid_differences(grid, value):
+    n_rows = next(
+        (
+            n_above
+            for n_above, difference in horizontal_differences(grid).items()
+            if difference == value
+        ),
+        0,
+    )
+    n_columns = next(
+        (
+            n_left
+            for n_left, difference in vertical_differences(grid).items()
+            if difference == value
+        ),
+        0,
+    )
+    return n_rows, n_columns
 
 
 def part1(text):
-    total_n_columns, total_n_rows = 0, 0
+    total_n_rows, total_n_columns = 0, 0
     for grid in text.split('\n\n'):
         grid = grid.splitlines()
-        total_n_rows += get_n_rows(grid)
-        total_n_columns += get_n_columns(grid)
+        n_rows, n_columns = get_grid_differences(grid, 0)
+        total_n_rows += n_rows
+        total_n_columns += n_columns
     return 100 * total_n_rows + total_n_columns
 
 
 def part2(text):
-    return
+    total_n_rows, total_n_columns = 0, 0
+    for grid in text.split('\n\n'):
+        grid = grid.splitlines()
+        n_rows, n_columns = get_grid_differences(grid, 1)
+        total_n_rows += n_rows
+        total_n_columns += n_columns
+    return 100 * total_n_rows + total_n_columns
