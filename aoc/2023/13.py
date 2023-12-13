@@ -1,4 +1,4 @@
-def horizontal_differences(grid):
+def get_horizontal_differences(grid):
     n_rows, n_columns = len(grid), len(grid[0])
     differences_per_row = {}
     for ri in range(1, n_rows):
@@ -11,7 +11,7 @@ def horizontal_differences(grid):
     return differences_per_row
 
 
-def vertical_differences(grid):
+def get_vertical_differences(grid):
     n_rows, n_columns = len(grid), len(grid[0])
     differences_per_column = {}
     for ci in range(1, n_columns):
@@ -25,20 +25,13 @@ def vertical_differences(grid):
 
 
 def get_grid_differences(grid, value):
+    h_diffs, v_diffs = get_horizontal_differences(grid), get_vertical_differences(grid)
     n_rows = next(
-        (
-            n_above
-            for n_above, difference in horizontal_differences(grid).items()
-            if difference == value
-        ),
+        (n_above for n_above, diff in h_diffs.items() if diff == value),
         0,
     )
     n_columns = next(
-        (
-            n_left
-            for n_left, difference in vertical_differences(grid).items()
-            if difference == value
-        ),
+        (n_left for n_left, diff in v_diffs.items() if diff == value),
         0,
     )
     return n_rows, n_columns
