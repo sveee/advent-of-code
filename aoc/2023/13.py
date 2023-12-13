@@ -3,7 +3,7 @@ def get_horizontal_differences(grid):
     differences_per_row = {}
     for ri in range(1, n_rows):
         n_differences = 0
-        for k in range(max(ri, n_rows - ri)):
+        for k in range(max(ri - 1, n_rows - ri)):
             if 0 <= ri - k - 1 < n_rows and 0 <= ri + k < n_rows:
                 for ci in range(n_columns):
                     n_differences += grid[ri - k - 1][ci] != grid[ri + k][ci]
@@ -16,7 +16,7 @@ def get_vertical_differences(grid):
     differences_per_column = {}
     for ci in range(1, n_columns):
         n_differences = 0
-        for k in range(max(ci, n_columns - ci)):
+        for k in range(max(ci - 1, n_columns - ci)):
             if 0 <= ci - k - 1 < n_columns and 0 <= ci + k < n_columns:
                 for ri in range(n_rows):
                     n_differences += grid[ri][ci - k - 1] != grid[ri][ci + k]
