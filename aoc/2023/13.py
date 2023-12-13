@@ -24,34 +24,29 @@ def get_vertical_differences(grid):
     return differences_per_column
 
 
-def get_grid_differences(grid, value):
-    h_diffs, v_diffs = get_horizontal_differences(grid), get_vertical_differences(grid)
-    n_rows = next(
-        (n_above for n_above, diff in h_diffs.items() if diff == value),
-        0,
-    )
-    n_columns = next(
-        (n_left for n_left, diff in v_diffs.items() if diff == value),
-        0,
-    )
-    return n_rows, n_columns
+def get_summary(grids, value):
+    total_n_rows, total_n_columns = 0, 0
+    for grid in grids:
+        grid = grid.splitlines()
+        h_diffs, v_diffs = get_horizontal_differences(grid), get_vertical_differences(
+            grid
+        )
+        n_rows = next(
+            (n_above for n_above, diff in h_diffs.items() if diff == value),
+            0,
+        )
+        n_columns = next(
+            (n_left for n_left, diff in v_diffs.items() if diff == value),
+            0,
+        )
+        total_n_rows += n_rows
+        total_n_columns += n_columns
+    return 100 * total_n_rows + total_n_columns
 
 
 def part1(text):
-    total_n_rows, total_n_columns = 0, 0
-    for grid in text.split('\n\n'):
-        grid = grid.splitlines()
-        n_rows, n_columns = get_grid_differences(grid, 0)
-        total_n_rows += n_rows
-        total_n_columns += n_columns
-    return 100 * total_n_rows + total_n_columns
+    return get_summary(text.splitlines(), 0)
 
 
 def part2(text):
-    total_n_rows, total_n_columns = 0, 0
-    for grid in text.split('\n\n'):
-        grid = grid.splitlines()
-        n_rows, n_columns = get_grid_differences(grid, 1)
-        total_n_rows += n_rows
-        total_n_columns += n_columns
-    return 100 * total_n_rows + total_n_columns
+    return get_summary(text.splitlines(), 1)
