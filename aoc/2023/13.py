@@ -45,8 +45,8 @@ def get_summary(grids, value):
 
 
 def part1(text):
-    return get_summary(text.splitlines(), 0)
+    return get_summary(text.split('\n\n'), 0)
 
 
 def part2(text):
-    return get_summary(text.splitlines(), 1)
+    return get_summary(text.split('\n\n'), 1)
