@@ -1,4 +1,3 @@
-from copy import deepcopy
 
 directions = {
     'north': (-1, 0),
@@ -9,10 +8,8 @@ directions = {
 
 
 def roll_direction(grid, direction):
-    grid = deepcopy(grid)
     n, m = len(grid), len(grid[0])
     dx, dy = directions[direction]
-
     if direction == 'north':
         points = [(x, y) for x in range(n) for y in range(m)]
     elif direction == 'west':
@@ -45,16 +42,22 @@ def part1(text):
 
 def part2(text):
     grid = [list(line) for line in text.splitlines()]
-    visited = {}
-    cycle_state = {}
-    n, a, b = 1_000_000_000, 1, 1
+    grid_to_step, step_to_grid = {}, {}
+    n, cycle_size, cycle_start = 1_000_000_000, 0, 0
     for cycle_id in range(n):
-        state = '\n'.join([''.join(line) for line in grid])
-        if state in visited:
-            a, b = len(visited) - visited[state], visited[state]
+        state = '\n'.join(''.join(row) for row in grid)
+        if state in grid_to_step:
+            cycle_size, cycle_start = (
+                len(grid_to_step) - grid_to_step[state],
+                grid_to_step[state],
+            )
             break
-        visited[state] = cycle_id
-        cycle_state[cycle_id] = state
+        grid_to_step[state] = cycle_id
+        step_to_grid[cycle_id] = state.splitlines()
         for direction in directions:
             grid = roll_direction(grid, direction)
-    return calculate_load(cycle_state[(n - b) % a + b if n > b else n].splitlines())
+    return calculate_load(
+        step_to_grid[
+            (n - cycle_start) % cycle_size + cycle_start if n > cycle_start else n
+        ]
+    )
