@@ -16,11 +16,10 @@ class Beam:
 forward_slash_map = {Pair(-1, 0): Pair(-1, 0)}
 
 
-def part1(text):
-    grid = text.splitlines()
+def get_n_energized(start_beam, grid):
     n, m = len(grid), len(grid[0])
 
-    active_beams = [Beam(Pair(0, 0), Pair(0, 1))]
+    active_beams = [start_beam]
     energized = set()
     visited = set()
     while len(active_beams) > 0:
@@ -63,5 +62,20 @@ def part1(text):
     return len(energized)
 
 
+
+def part1(text):
+    grid = text.splitlines()
+    return get_n_energized(Beam(Pair(0, 0), Pair(0, 1)), grid)
+
+
 def part2(text):
-    pass
+    start_beams = []
+    grid = text.splitlines()
+    n, m = len(grid), len(grid[0])
+    for y in range(m):
+        start_beams.append(Beam(Pair(0, y), Pair(1, 0)))
+        start_beams.append(Beam(Pair(n-1, y), Pair(-1, 0)))
+    for x in range(n):
+        start_beams.append(Beam(Pair(x, 0), Pair(0, 1)))
+        start_beams.append(Beam(Pair(x, m-1), Pair(0, -1)))
+    return max(get_n_energized(start_beam, grid) for start_beam in start_beams)
