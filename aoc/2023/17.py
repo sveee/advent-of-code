@@ -38,10 +38,10 @@ def get_neighbours(node, grid, min_n_blocks, max_m_blocks):
             and node.last_direction in directions
             and direction != node.last_direction
         ):
-            # we need to go in a certain direction at least min_n_blocks times
+            # we need to go in a given direction at least min_n_blocks times
             continue
         if node.n_blocks == max_m_blocks and node.last_direction == direction:
-            # we need to go in a certain direction at most max_m_blocks times
+            # we need to go in a given direction at most max_m_blocks times
             continue
         nx, ny = node.x + dx, node.y + dy
         if not (0 <= nx < len(grid) and 0 <= ny < len(grid[0])):
