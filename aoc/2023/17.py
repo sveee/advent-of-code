@@ -14,16 +14,16 @@ class Node:
 
 
 directions = {
-    'north': (-1, 0),
-    'south': (1, 0),
-    'west': (0, -1),
-    'east': (0, 1),
+    'up': (-1, 0),
+    'down': (1, 0),
+    'left': (0, -1),
+    'right': (0, 1),
 }
 opposite_directions = {
-    'north': 'south',
-    'south': 'north',
-    'west': 'east',
-    'east': 'west',
+    'up': 'down',
+    'down': 'up',
+    'left': 'right',
+    'right': 'left',
 }
 
 
