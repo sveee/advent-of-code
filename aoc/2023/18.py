@@ -16,21 +16,11 @@ class Instruction:
 
 
 @dataclass(frozen=True)
-class YSegment:
+class Segment:
     start: int
     end: int
-    x: int
-    flips_y_parity: bool
-
-    def size(self):
-        return self.end - self.start + 1
-
-
-@dataclass(frozen=True)
-class XSegment:
-    start: int
-    end: int
-    y: int
+    level: int = 0
+    flips_y_parity: bool = False
 
     def size(self):
         return self.end - self.start + 1
@@ -38,8 +28,8 @@ class XSegment:
 
 @dataclass
 class Trench:
-    x_segments: List[XSegment] = field(default_factory=list)
-    y_segments: List[YSegment] = field(default_factory=list)
+    x_segments: List[Segment] = field(default_factory=list)
+    y_segments: List[Segment] = field(default_factory=list)
 
     def size(self):
         return sum(x_segment.size() - 1 for x_segment in self.x_segments) + sum(
@@ -63,10 +53,10 @@ def get_x_segments(trench):
     )
     x_segments = []
     for index in range(len(xs)):
-        x_segments.append(XSegment(xs[index], xs[index], 0))
+        x_segments.append(Segment(start=xs[index], end=xs[index]))
         if index + 1 < len(xs):
             if xs[index] + 1 <= xs[index + 1] - 1:
-                x_segments.append(XSegment(xs[index] + 1, xs[index + 1] - 1, 0))
+                x_segments.append(Segment(start=xs[index] + 1, end=xs[index + 1] - 1))
     return x_segments
 
 
@@ -75,10 +65,15 @@ def get_y_segments(x, trench):
     for x_segment in trench.x_segments:
         if x_segment.start < x < x_segment.end:
             y_segments.append(
-                YSegment(start=x_segment.y, end=x_segment.y, x=0, flips_y_parity=True)
+                Segment(
+                    start=x_segment.level,
+                    end=x_segment.level,
+                    level=0,
+                    flips_y_parity=True,
+                )
             )
     for y_segment in trench.y_segments:
-        if y_segment.x == x:
+        if y_segment.level == x:
             y_segments.append(y_segment)
     return sorted(y_segments, key=lambda x: x.start)
 
@@ -92,7 +87,9 @@ def get_trench(instructions):
         steps = instructions[index].steps
         if dy == 0:
             trench.x_segments.append(
-                XSegment(start=min(x, x + steps * dx), end=max(x, x + steps * dx), y=y)
+                Segment(
+                    start=min(x, x + steps * dx), end=max(x, x + steps * dx), level=y
+                )
             )
         else:
             flips_y_parity = (
@@ -100,10 +97,10 @@ def get_trench(instructions):
                 == instructions[(index + 1 + n) % n].direction
             )
             trench.y_segments.append(
-                YSegment(
+                Segment(
                     start=min(y, y + steps * dy),
                     end=max(y, y + steps * dy),
-                    x=x,
+                    level=x,
                     flips_y_parity=flips_y_parity,
                 )
             )
