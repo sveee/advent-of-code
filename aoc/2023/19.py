@@ -82,7 +82,7 @@ class Workflow:
         )
 
 
-def is_accepted(xmas, workflow_by_name):
+def is_accepted(pair, workflow_by_name):
     name = 'in'
     while True:
         if name == 'A':
@@ -91,7 +91,7 @@ def is_accepted(xmas, workflow_by_name):
             return False
 
         for rule in workflow_by_name[name].rules:
-            if rule.segment.contains(xmas[rule.letter]):
+            if rule.segment.contains(pair[rule.letter]):
                 name = rule.next_name
                 break
 
