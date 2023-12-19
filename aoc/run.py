@@ -62,8 +62,11 @@ def submit(
 @click.option('--year', '-y', default=now.year)
 @click.option('--day', '-d', default=now.day)
 def main(year: int, day: int) -> None:
+    test_folder = f'{os.path.dirname(__file__)}/{year}/tests/'
+    if not os.path.exists(test_folder):
+        os.makedirs(test_folder)
     problem_module = import_module(f'aoc.{year}.{day:02d}')
-    test_config_path = f'{os.path.dirname(__file__)}/{year}/tests/{day:02d}.yml'
+    test_config_path = f'{test_folder}/{day:02d}.yml'
     with open(test_config_path) as f:
         test_data = yaml.safe_load(f)
 
@@ -82,7 +85,6 @@ def main(year: int, day: int) -> None:
                 parameters = test_case
                 generated = str(solution_funcs[part](text_input, **parameters))
                 print(f'test{test_index}:', _equal_status(generated, excepted))
-                assert generated == excepted
                 all_tests_pass &= generated == excepted
 
     if all_tests_pass:

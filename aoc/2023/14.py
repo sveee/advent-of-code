@@ -1,4 +1,3 @@
-
 directions = {
     'north': (-1, 0),
     'west': (0, -1),
