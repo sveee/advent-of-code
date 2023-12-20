@@ -15,44 +15,50 @@ class Pulse(Enum):
     LOW = 'low'
 
 
-def press_button(times, conjunction_memory, is_flip_flop_on, module_type, graph):
+def press_button(
+    conjunction_memory, is_flip_flop_on, module_type, graph, terminal_module=None
+):
     counter = Counter()
-    for _ in range(times):
-        queue = deque([('broadcaster', None, Pulse.LOW)])
-        while len(queue) > 0:
-            module, prev_module, pulse = queue.popleft()
-            counter[pulse] += 1
+    queue = deque([('broadcaster', None, Pulse.LOW)])
+    while len(queue) > 0:
+        module, prev_module, pulse = queue.popleft()
+        counter[pulse] += 1
 
-            if module_type[module] == Module.FLIP_FLOP:
-                if pulse == Pulse.LOW:
-                    next_pulse = (
-                        Pulse.HIGH if not is_flip_flop_on[module] else Pulse.LOW
-                    )
-                    is_flip_flop_on[module] ^= True
-                elif pulse == Pulse.HIGH:
-                    next_pulse = None
-            elif module_type[module] == Module.CONJUNCTION:
-                conjunction_memory[module][prev_module] = pulse
-                next_pulse = (
-                    Pulse.LOW
-                    if all(
-                        prev_pulse == Pulse.HIGH
-                        for prev_pulse in conjunction_memory[module].values()
-                    )
-                    else Pulse.HIGH
-                )
-            elif module_type[module] == Module.BROADCASTER:
-                next_pulse = pulse
-            elif module_type[module] == Module.UNTYPED:
+        if pulse == Pulse.LOW and module == terminal_module:
+            return True
+
+        if module_type[module] == Module.FLIP_FLOP:
+            if pulse == Pulse.LOW:
+                next_pulse = Pulse.HIGH if not is_flip_flop_on[module] else Pulse.LOW
+                is_flip_flop_on[module] ^= True
+            elif pulse == Pulse.HIGH:
                 next_pulse = None
+        elif module_type[module] == Module.CONJUNCTION:
+            conjunction_memory[module][prev_module] = pulse
+            next_pulse = (
+                Pulse.LOW
+                if all(
+                    prev_pulse == Pulse.HIGH
+                    for prev_pulse in conjunction_memory[module].values()
+                )
+                else Pulse.HIGH
+            )
+        elif module_type[module] == Module.BROADCASTER:
+            next_pulse = pulse
+        elif module_type[module] == Module.UNTYPED:
+            next_pulse = None
 
-            if next_pulse is not None:
-                for next_module in graph[module]:
-                    queue.append((next_module, module, next_pulse))
+        if next_pulse is not None:
+            for next_module in graph[module]:
+                queue.append((next_module, module, next_pulse))
+
+    if terminal_module:
+        return False
+
     return counter
 
 
-def part1(text, n_presses=1000):
+def read_input(text):
     graph = {}
     module_type = {}
     is_flip_flop_on = {}
@@ -80,11 +86,28 @@ def part1(text, n_presses=1000):
             if module_type[next_module] == Module.CONJUNCTION:
                 conjunction_memory[next_module][module] = Pulse.LOW
 
-    counter = press_button(
-        n_presses, conjunction_memory, is_flip_flop_on, module_type, graph
-    )
+    return graph, module_type, is_flip_flop_on, conjunction_memory
+
+def part1(text, n_presses=1000):
+    graph, module_type, is_flip_flop_on, conjunction_memory = read_input(text)
+    counter = Counter()
+    for _ in range(n_presses):
+        counter += press_button(
+            conjunction_memory, is_flip_flop_on, module_type, graph
+        )
     return counter[Pulse.HIGH] * counter[Pulse.LOW]
 
 
-def part2(text):
-    pass
+def part2(text, terminal_module='rx'):
+    graph, module_type, is_flip_flop_on, conjunction_memory = read_input(text)
+    print(len(graph))
+    n_presses = 0
+    while True:
+        n_presses += 1
+        if n_presses % 100000 == 0:
+            print(n_presses)
+        if press_button(
+            conjunction_memory, is_flip_flop_on, module_type, graph, terminal_module=terminal_module
+        ):
+            break
+    return n_presses

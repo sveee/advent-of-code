@@ -29,3 +29,12 @@ part1:
     %b -> con
     &con -> output
   answer: '11687500'
+part2:
+- input: |-
+    broadcaster -> a
+    %a -> inv, con
+    &inv -> b
+    %b -> con
+    &con -> output
+  terminal_module: output
+  answer: '1'
