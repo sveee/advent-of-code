@@ -1,3 +1,4 @@
+import math
 from collections import Counter, defaultdict, deque
 from enum import Enum
 from itertools import chain
@@ -16,7 +17,7 @@ class Pulse(Enum):
 
 
 def press_button(
-    conjunction_memory, is_flip_flop_on, module_type, graph, terminal_module=None
+    is_flip_flop_on, conjunction_memory, module_type, graph, terminal_module=None
 ):
     counter = Counter()
     queue = deque([('broadcaster', None, Pulse.LOW)])
@@ -61,7 +62,6 @@ def press_button(
 def read_input(text):
     graph = {}
     module_type = {}
-    is_flip_flop_on = {}
     for line in text.splitlines():
         source, destinations = line.split(' -> ')
         if source == 'broadcaster':
@@ -73,41 +73,72 @@ def read_input(text):
             )
         destinations = destinations.split(', ')
         graph[source] = destinations
-        if module_type[source] == Module.FLIP_FLOP:
-            is_flip_flop_on[source] = False
-
     for module in chain(*graph.values()):
         if module not in module_type:
             module_type[module] = Module.UNTYPED
+    return graph, module_type
 
+
+def create_memory(graph, module_type):
+    is_flip_flop_on = {}
     conjunction_memory = defaultdict(dict)
     for module, next_modules in graph.items():
+        if module_type[module] == Module.FLIP_FLOP:
+            is_flip_flop_on[module] = False
         for next_module in next_modules:
             if module_type[next_module] == Module.CONJUNCTION:
                 conjunction_memory[next_module][module] = Pulse.LOW
+    return is_flip_flop_on, conjunction_memory
 
-    return graph, module_type, is_flip_flop_on, conjunction_memory
 
 def part1(text, n_presses=1000):
-    graph, module_type, is_flip_flop_on, conjunction_memory = read_input(text)
+    graph, module_type = read_input(text)
+    is_flip_flop_on, conjunction_memory = create_memory(graph, module_type)
     counter = Counter()
     for _ in range(n_presses):
-        counter += press_button(
-            conjunction_memory, is_flip_flop_on, module_type, graph
-        )
+        counter += press_button(is_flip_flop_on, conjunction_memory, module_type, graph)
     return counter[Pulse.HIGH] * counter[Pulse.LOW]
 
 
-def part2(text, terminal_module='rx'):
-    graph, module_type, is_flip_flop_on, conjunction_memory = read_input(text)
-    print(len(graph))
+def find_n_presses(graph, module_type, terminal_module):
+    is_flip_flop_on, conjunction_memory = create_memory(graph, module_type)
     n_presses = 0
     while True:
         n_presses += 1
-        if n_presses % 100000 == 0:
-            print(n_presses)
         if press_button(
-            conjunction_memory, is_flip_flop_on, module_type, graph, terminal_module=terminal_module
+            is_flip_flop_on, conjunction_memory, module_type, graph, terminal_module
         ):
             break
     return n_presses
+
+
+def get_subgraph(node, graph):
+    stack = [node]
+    visited = set()
+    while len(stack) > 0:
+        node = stack.pop()
+        if node in visited:
+            continue
+        visited.add(node)
+        if node not in graph:
+            continue
+        for next_node in graph[node]:
+            stack.append(next_node)
+
+    return {
+        node: [next_node for next_node in graph[node] if next_node in visited]
+        for node in graph
+        if node in visited
+    }
+
+
+def part2(text):
+    graph, module_type = read_input(text)
+    n_terminal_presses = []
+    for start_module in graph['broadcaster']:
+        subgraph = get_subgraph(start_module, graph)
+        subgraph['broadcaster'] = [start_module]
+        n_terminal_presses.append(
+            find_n_presses(subgraph, module_type, terminal_module='rx')
+        )
+    return math.lcm(*n_terminal_presses)
