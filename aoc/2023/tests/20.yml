@@ -1,0 +1,31 @@
+part1:
+- input: |-
+    broadcaster -> a, b, c
+    %a -> b
+    %b -> c
+    %c -> inv
+    &inv -> a
+  n_presses: 1
+  answer: '32'
+- input: |-
+    broadcaster -> a, b, c
+    %a -> b
+    %b -> c
+    %c -> inv
+    &inv -> a
+  answer: '32000000'
+- input: |-
+    broadcaster -> a
+    %a -> inv, con
+    &inv -> b
+    %b -> con
+    &con -> output
+  n_presses: 1
+  answer: '16'
+- input: |-
+    broadcaster -> a
+    %a -> inv, con
+    &inv -> b
+    %b -> con
+    &con -> output
+  answer: '11687500'
