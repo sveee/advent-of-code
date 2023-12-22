@@ -3,26 +3,26 @@ from dataclasses import dataclass
 from typing import Dict, NamedTuple, Optional, Set
 
 
-class Position3D(NamedTuple):
+class Position(NamedTuple):
     x: int
     y: int
     z: int
 
     @staticmethod
-    def from_str(s: str) -> 'Position3D':
-        return Position3D(*map(int, s.split(',')))
+    def from_str(s: str) -> 'Position':
+        return Position(*map(int, s.split(',')))
 
 
 @dataclass(frozen=True, eq=True)
 class Brick:
-    start: Position3D
-    end: Position3D
+    start: Position
+    end: Position
 
     def move_down(self, n: int = 1) -> Optional['Brick']:
         return (
             Brick(
-                start=Position3D(self.start.x, self.start.y, self.start.z - n),
-                end=Position3D(self.end.x, self.end.y, self.end.z - n),
+                start=Position(self.start.x, self.start.y, self.start.z - n),
+                end=Position(self.end.x, self.end.y, self.end.z - n),
             )
             if self.start.z > n and self.end.z > n
             else None
@@ -52,7 +52,7 @@ class Brick:
 
     @staticmethod
     def from_str(s: str) -> 'Brick':
-        return Brick(*sorted(map(lambda x: Position3D.from_str(x), s.split('~'))))
+        return Brick(*sorted(map(lambda x: Position.from_str(x), s.split('~'))))
 
 
 def get_intersection(brick, other_bricks):
