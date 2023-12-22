@@ -43,11 +43,11 @@ class Brick:
         return False
 
     @property
-    def zmax(self):
+    def z_max(self):
         return max(self.start.z, self.end.z)
 
     @property
-    def zmin(self):
+    def z_min(self):
         return min(self.start.z, self.end.z)
 
     @staticmethod
@@ -66,7 +66,7 @@ def get_settled_bricks(text):
     settled_bricks = []
     for brick in sorted(bricks, key=lambda b: min(b.start.z, b.end.z)):
         distance = (
-            brick.zmin
+            brick.z_min
             - max(
                 [settled_brick.zmax for settled_brick in settled_bricks],
                 default=1,
