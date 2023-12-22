@@ -18,13 +18,13 @@ class Brick:
     start: Position3D
     end: Position3D
 
-    def move_down(self) -> Optional['Brick']:
+    def move_down(self, n: int = 1) -> Optional['Brick']:
         return (
             Brick(
-                start=Position3D(self.start.x, self.start.y, self.start.z - 1),
-                end=Position3D(self.end.x, self.end.y, self.end.z - 1),
+                start=Position3D(self.start.x, self.start.y, self.start.z - n),
+                end=Position3D(self.end.x, self.end.y, self.end.z - n),
             )
-            if self.start.z > 1 and self.end.z > 1
+            if self.start.z > n and self.end.z > n
             else None
         )
 
@@ -42,6 +42,14 @@ class Brick:
 
         return False
 
+    @property
+    def zmax(self):
+        return max(self.start.z, self.end.z)
+
+    @property
+    def zmin(self):
+        return min(self.start.z, self.end.z)
+
     @staticmethod
     def from_str(s: str) -> 'Brick':
         return Brick(*sorted(map(lambda x: Position3D.from_str(x), s.split('~'))))
@@ -55,9 +63,17 @@ def get_intersection(brick, other_bricks):
 
 def get_settled_bricks(text):
     bricks = [Brick.from_str(line) for line in text.splitlines()]
-
     settled_bricks = []
     for brick in sorted(bricks, key=lambda b: min(b.start.z, b.end.z)):
+        distance = (
+            brick.zmin
+            - max(
+                [settled_brick.zmax for settled_brick in settled_bricks],
+                default=1,
+            )
+            - 1
+        )
+        brick = brick.move_down(distance)
         while (down_brick := brick.move_down()) and not get_intersection(
             down_brick, settled_bricks
         ):
