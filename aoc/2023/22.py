@@ -68,7 +68,7 @@ def get_settled_bricks(text):
         distance = (
             brick.z_min
             - max(
-                [settled_brick.zmax for settled_brick in settled_bricks],
+                [settled_brick.z_max for settled_brick in settled_bricks],
                 default=1,
             )
             - 1
