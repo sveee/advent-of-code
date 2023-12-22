@@ -1,6 +1,6 @@
-from dataclasses import dataclass
-from typing import NamedTuple, Optional, Dict, Set
 from collections import defaultdict
+from dataclasses import dataclass
+from typing import Dict, NamedTuple, Optional, Set
 
 
 class Position3D(NamedTuple):
@@ -48,61 +48,57 @@ class Brick:
 
 
 def get_intersection(brick, other_bricks):
-    return {other_brick for other_brick in other_bricks if brick.intersects(other_brick)}
+    return {
+        other_brick for other_brick in other_bricks if brick.intersects(other_brick)
+    }
 
 
-def part1(text):
+def get_settled_bricks(text):
     bricks = [Brick.from_str(line) for line in text.splitlines()]
 
     settled_bricks = []
     for brick in sorted(bricks, key=lambda b: min(b.start.z, b.end.z)):
-        while (down_brick := brick.move_down()) and not get_intersection(down_brick, settled_bricks):
+        while (down_brick := brick.move_down()) and not get_intersection(
+            down_brick, settled_bricks
+        ):
             brick = down_brick
         settled_bricks.append(brick)
+    return settled_bricks
 
+
+def part1(text):
+    settled_bricks = get_settled_bricks(text)
     support_bricks = set()
     for index, brick in enumerate(settled_bricks):
         if not (down_brick := brick.move_down()):
             continue
-        intersection = get_intersection(down_brick, settled_bricks[:index] + settled_bricks[index + 1 :])
+        intersection = get_intersection(
+            down_brick, settled_bricks[:index] + settled_bricks[index + 1 :]
+        )
         if len(intersection) == 1:
             support_bricks.add(intersection.pop())
-
     return len(settled_bricks) - len(support_bricks)
 
+
 def part2(text):
-    bricks = [Brick.from_str(line) for line in text.splitlines()]
-
-    settled_bricks = []
-    for brick in sorted(bricks, key=lambda b: min(b.start.z, b.end.z)):
-        while (down_brick := brick.move_down()) and not get_intersection(down_brick, settled_bricks):
-            brick = down_brick
-        settled_bricks.append(brick)
-
-    brick_index = {
-        brick: index
-        for index, brick in enumerate(settled_bricks)
-    }
-
-    graph = defaultdict(list) 
+    settled_bricks = get_settled_bricks(text)
+    graph = defaultdict(list)
     for index, brick in enumerate(settled_bricks):
         if not (down_brick := brick.move_down()):
             continue
-        intersection = get_intersection(down_brick, settled_bricks[:index] + settled_bricks[index + 1 :])
-
-        for support_brick in intersection:
-            graph[brick_index[support_brick]].append(brick_index[brick])
-
+        for support_brick in get_intersection(
+            down_brick, settled_bricks[:index] + settled_bricks[index + 1 :]
+        ):
+            graph[support_brick].append(brick)
 
     n_total_falls = 0
-    for removed_node in brick_index.values():
+    for removed_node in list(graph):
         in_degree = defaultdict(int)
         for next_nodes in graph.values():
             for next_node in next_nodes:
                 in_degree[next_node] += 1
 
         zero_in_degree_nodes = [removed_node]
-
         n_falls = 0
         while len(zero_in_degree_nodes) > 0:
             node = zero_in_degree_nodes.pop()
