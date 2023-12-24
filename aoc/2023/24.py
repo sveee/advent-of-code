@@ -137,7 +137,7 @@ def get_equations(velocity, hailstones, only_3=True):
     return A, b
 
 
-# # For part 2 we can use scipy.fsolve but it return inaccurate solution
+# # For part 2 we can use scipy.fsolve but it computes inaccurate solution
 # from scipy.optimize import fsolve
 
 #     def equations(vars):
