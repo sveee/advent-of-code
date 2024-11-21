@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
 from importlib import import_module
-from typing import Any, Dict
+from typing import Any
 
 import click
 import yaml
@@ -127,8 +127,8 @@ class ProblemSolver:
 @click.option('--year', '-y', default=now.year, help='Year of the problem')
 @click.option('--day', '-d', default=now.day, help='Day of the problem')
 def main(year: int, day: int) -> None:
-    executor = PythonRunner(year, day)
-    solver = ProblemSolver(executor)
+    runner = PythonRunner(year, day)
+    solver = ProblemSolver(runner)
     solver.solve()
 
 
