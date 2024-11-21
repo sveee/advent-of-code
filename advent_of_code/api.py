@@ -29,6 +29,13 @@ def get_full_input(year: int, day: int) -> str:
     return input_text
 
 
+def submit_solution(answer: str, level: int, year: int, day: int):
+    post_request(
+        f'https://adventofcode.com/{year}/day/{day}/answer',
+        {'level': level, 'answer': answer},
+    )
+
+
 def get_problem_soup(year: int, day: int) -> str:
     return BeautifulSoup(
         get_request(f'https://adventofcode.com/{year}/day/{day}'),

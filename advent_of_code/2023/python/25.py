@@ -1,6 +1,6 @@
-
 from collections import Counter, defaultdict
 from functools import reduce
+
 
 def part1(text):
     graph = defaultdict(list)
@@ -24,7 +24,8 @@ def part1(text):
         next_nodes = [
             next_node
             for next_node in next_nodes
-            if (node, next_node) not in edges_to_remove and (next_node, node) not in edges_to_remove
+            if (node, next_node) not in edges_to_remove
+            and (next_node, node) not in edges_to_remove
         ]
         graph[node].extend(next_nodes)
         for next_node in next_nodes:
@@ -45,7 +46,7 @@ def part1(text):
                     stack.append(next_node)
 
     assert component_id == 2, component_id
-    return reduce(lambda x,y: x*y, Counter(components.values()).values())
+    return reduce(lambda x, y: x * y, Counter(components.values()).values())
 
 
 def part2(text):

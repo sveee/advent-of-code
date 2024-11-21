@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "aoc"
+name = "advent_of_code"
 version = "0.1.0"
 description = ""
 authors = ["Svetoslav Karaivanov <first_name.second_name@gmail.com>"]
