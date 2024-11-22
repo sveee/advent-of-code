@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import re
 from abc import ABC, abstractmethod
@@ -46,7 +47,7 @@ class ProblemSolver:
 
     def read_test_data(self) -> dict[str, Any]:
         test_folder = os.path.join(
-            os.path.dirname(__file__), str(self.runner.year), 'tests'
+            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'), str(self.runner.year), 'tests'
         )
         os.makedirs(test_folder, exist_ok=True)
         test_config_path = os.path.join(test_folder, f'{self.runner.day:02d}.yml')
@@ -62,25 +63,23 @@ class ProblemSolver:
             else f'❌ {generated} != {expected}'
         )
 
-    def run_test(self, part: Solution, test_case: dict[str, Any]) -> bool:
+    def run_test(self, test_index: int, part: Solution, test_case: dict[str, Any]) -> bool:
         input_data = test_case.pop('input')
         expected_output = str(test_case.pop('answer'))
         parameters = test_case
         generated_output = self.runner.run(part, input_data, **parameters)
         status = self._equal_status(generated_output, expected_output)
-        print(f'Test: {status}')
+        print(f'test {part.value}.{test_index}: {status}')
         return generated_output == expected_output
 
-    def check_all_tests(self) -> bool:
+    def all_tests_pass(self) -> bool:
         all_tests_pass = True
         for part in Solution:
             if part.value in self.test_data:
-                print(f'Running tests for {part.value}')
                 for test_index, test_case in enumerate(
                     self.test_data[part.value], start=1
                 ):
-                    print(f'Test {test_index}:')
-                    all_tests_pass &= self.run_test(part, test_case)
+                    all_tests_pass &= self.run_test(test_index, part, test_case)
         return all_tests_pass
 
     def get_n_parts_solved(self) -> int:
@@ -101,10 +100,10 @@ class ProblemSolver:
             return self.runner.run(Solution.PART1, full_input)
         return self.runner.run(Solution.PART2, full_input)
 
-    def submit_and_display_response(self, answer: str) -> None:
+    def submit_and_display_response(self, answer: str, level: int) -> None:
         response = submit_solution(
             answer=answer,
-            level=self.get_n_parts_solved() + 1,
+            level=level,
             year=self.runner.year,
             day=self.runner.day,
         )
@@ -112,15 +111,16 @@ class ProblemSolver:
         print(re.sub(r'\s+', ' ', soup.find('article').text))
 
     def solve(self) -> None:
-        if not self.check_all_tests():
+        if not self.all_tests_pass():
             return
-        if self.get_n_parts_solved() >= 2:
+        n_parts_solved = self.get_n_parts_solved()
+        if n_parts_solved == 2:
             self.display_solutions()
             return
         answer = self.get_solution_answer()
         if not answer:
             return
-        self.submit_and_display_response(answer)
+        self.submit_and_display_response(answer=answer, level=n_parts_solved + 1)
 
 
 @click.command()
