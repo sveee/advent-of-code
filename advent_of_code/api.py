@@ -29,8 +29,8 @@ def get_full_input(year: int, day: int) -> str:
     return input_text
 
 
-def submit_solution(answer: str, level: int, year: int, day: int):
-    post_request(
+def submit_solution(answer: str, level: int, year: int, day: int) -> str:
+    return post_request(
         f'https://adventofcode.com/{year}/day/{day}/answer',
         {'level': level, 'answer': answer},
     )
