@@ -11,9 +11,8 @@ import click
 import yaml
 from bs4 import BeautifulSoup
 
-from advent_of_code.api import get_full_input, get_problem_soup, submit_solution
-
-now = datetime.now()
+from advent_of_code.api import (get_full_input, get_problem_soup,
+                                submit_solution)
 
 
 class Solution(Enum):
@@ -47,7 +46,9 @@ class ProblemSolver:
 
     def read_test_data(self) -> dict[str, Any]:
         test_folder = os.path.join(
-            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'), str(self.runner.year), 'tests'
+            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
+            str(self.runner.year),
+            'tests',
         )
         os.makedirs(test_folder, exist_ok=True)
         test_config_path = os.path.join(test_folder, f'{self.runner.day:02d}.yml')
@@ -63,7 +64,9 @@ class ProblemSolver:
             else f'❌ {generated} != {expected}'
         )
 
-    def run_test(self, test_index: int, part: Solution, test_case: dict[str, Any]) -> bool:
+    def run_test(
+        self, test_index: int, part: Solution, test_case: dict[str, Any]
+    ) -> bool:
         input_data = test_case.pop('input')
         expected_output = str(test_case.pop('answer'))
         parameters = test_case
@@ -124,8 +127,8 @@ class ProblemSolver:
 
 
 @click.command()
-@click.option('--year', '-y', default=now.year, help='Year of the problem')
-@click.option('--day', '-d', default=now.day, help='Day of the problem')
+@click.option('--year', '-y', default=datetime.now().year, help='Year of the problem')
+@click.option('--day', '-d', default=datetime.now().day, help='Day of the problem')
 def main(year: int, day: int) -> None:
     runner = PythonRunner(year, day)
     solver = ProblemSolver(runner)

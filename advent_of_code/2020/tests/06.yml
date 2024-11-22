@@ -1,0 +1,36 @@
+part1:
+- input: |-
+    abc
+
+    a
+    b
+    c
+
+    ab
+    ac
+
+    a
+    a
+    a
+    a
+
+    b
+  answer: '11'
+part2:
+- input: |-
+    abc
+
+    a
+    b
+    c
+
+    ab
+    ac
+
+    a
+    a
+    a
+    a
+
+    b
+  answer: '6'

@@ -1,7 +1,5 @@
 import re
 
-from aoc.problem import Problem
-
 field_names = {
     'byr',
     'iyr',
@@ -37,23 +35,24 @@ def is_valid2(fields):
     )
 
 
-class Promblem2020_04(Problem):
-    def solve(self, text):
-        n_valid1, n_valid2 = 0, 0
-        for passport in text.split('\n\n'):
-            fields = dict(
-                field_value.split(':')
-                for field_value in re.split('\s+', passport.strip())
-            )
+def part1(text):
+    n_valid = 0
+    for passport in text.split('\n\n'):
+        fields = dict(
+            field_value.split(':') for field_value in re.split('\s+', passport.strip())
+        )
 
-            if is_valid1(fields):
-                n_valid1 += 1
-
-            if is_valid1(fields) and is_valid2(fields):
-                n_valid2 += 1
-
-        self.part1 = n_valid1
-        self.part2 = n_valid2
+        if is_valid1(fields):
+            n_valid += 1
+    return n_valid
 
 
-Promblem2020_04().submit()
+def part2(text):
+    n_valid = 0
+    for passport in text.split('\n\n'):
+        fields = dict(
+            field_value.split(':') for field_value in re.split('\s+', passport.strip())
+        )
+        if is_valid1(fields) and is_valid2(fields):
+            n_valid += 1
+    return n_valid

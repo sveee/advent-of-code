@@ -1,7 +1,5 @@
 from functools import reduce
 
-from aoc.problem import Problem
-
 directions = [
     (1, 1),
     (1, 3),
@@ -25,14 +23,14 @@ def find_n_trees_encountered(grid, direction):
     return n_trees_encountered
 
 
-class Promblem2020_03(Problem):
-    def solve(self, text):
-        grid = text.splitlines()
-        self.part1 = find_n_trees_encountered(grid, directions[1])
-        self.part2 = reduce(
-            lambda x, y: x * y,
-            [find_n_trees_encountered(grid, direction) for direction in directions],
-        )
+def part1(text):
+    grid = text.splitlines()
+    return find_n_trees_encountered(grid, directions[1])
 
 
-Promblem2020_03().submit()
+def part2(text):
+    grid = text.splitlines()
+    return reduce(
+        lambda x, y: x * y,
+        [find_n_trees_encountered(grid, direction) for direction in directions],
+    )
