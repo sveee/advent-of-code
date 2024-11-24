@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import re
+import subprocess
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
@@ -9,10 +10,9 @@ from typing import Any
 
 import click
 import yaml
-from bs4 import BeautifulSoup
-
 from advent_of_code.api import (get_full_input, get_problem_soup,
                                 submit_solution)
+from bs4 import BeautifulSoup
 
 
 class Solution(Enum):
@@ -29,6 +29,11 @@ class Runner(ABC):
     def run(self, part: Solution, input_data: str, **kwargs: Any) -> str: ...
 
 
+class Language(Enum):
+    PYTHON = 'python'
+    RUST = 'rust'
+
+
 class PythonRunner(Runner):
     def __init__(self, year: int, day: int):
         super().__init__(year, day)
@@ -37,6 +42,44 @@ class PythonRunner(Runner):
     def run(self, part: Solution, input_data: str, **kwargs: Any) -> str:
         part_func = getattr(self.module, part.value, None)
         return str(part_func(input_data, **kwargs))
+    
+
+class RustRunner(Runner):
+    def __init__(self, year: int, day: int):
+        super().__init__(year, day)
+        self.binary_path = os.path.join(
+            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
+            f'{year}/rust/target/debug/day{day:02d}',
+        )
+        assert os.path.exists(self.binary_path)
+        self.input_file = os.path.join(
+            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
+            f'{year}/rust/inputs/{day:02d}.txt',
+        )
+
+    def run(self, part: Solution, input_data: str, **kwargs: Any) -> str:
+        with open(self.input_file, 'w') as f:
+            f.write(input_data)
+
+        try:
+            # Call the Rust binary with the input file and part argument
+            result = subprocess.run(
+                [self.binary_path, part.value, self.input_file],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            print(f"Error running Rust binary: {e}")
+            print(f"stderr: {e.stderr}")
+            return ""
+
+
+language_runner_map = {
+    Language.PYTHON: PythonRunner,
+    Language.RUST: RustRunner,
+}
 
 
 class ProblemSolver:
@@ -129,8 +172,10 @@ class ProblemSolver:
 @click.command()
 @click.option('--year', '-y', default=datetime.now().year, help='Year of the problem')
 @click.option('--day', '-d', default=datetime.now().day, help='Day of the problem')
-def main(year: int, day: int) -> None:
-    runner = PythonRunner(year, day)
+@click.option('--language', '-l', default=Language.PYTHON.value, help='Language used')
+def main(year: int, day: int, language: str) -> None:
+    runner_cls = language_runner_map[Language(language)]
+    runner = runner_cls(year, day)
     solver = ProblemSolver(runner)
     solver.solve()
 
