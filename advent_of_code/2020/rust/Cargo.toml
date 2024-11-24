@@ -11,4 +11,3 @@ itertools = "0.10"
 [[bin]]
 name = "day01"
 path = "src/day01.rs"
-

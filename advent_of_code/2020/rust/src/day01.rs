@@ -1,4 +1,3 @@
-use aoc2020::solve;
 
 pub fn part1(input: &str) -> Option<String> {
     let numbers: Vec<i32> = input
@@ -39,5 +38,5 @@ pub fn part2(input: &str) -> Option<String> {
 }
 
 fn main() {
-    solve(part1, part2);
+    aoc2020::solve(part1, part2);
 }
