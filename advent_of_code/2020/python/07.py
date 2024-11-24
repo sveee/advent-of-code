@@ -9,6 +9,10 @@ class BagCount:
     count: int
 
 
+SHINY_GOLD_BAG = 'shiny gold bag'
+NO_OTHER_BAG = 'no other bag'
+
+
 def normalize(s):
     return s.rstrip('s')
 
@@ -21,7 +25,7 @@ def get_bag_counts(text):
             right = normalize(right)
             count, name = (
                 re.search(r'(\d+) (.*)', right).groups()
-                if right != 'no other bag'
+                if right != NO_OTHER_BAG
                 else (0, right)
             )
             bag_counts[normalize(left)].append(BagCount(name, int(count)))
@@ -29,9 +33,9 @@ def get_bag_counts(text):
 
 
 def contains_shiny_gold(bag, bag_counts):
-    if bag == 'no other bag':
+    if bag == NO_OTHER_BAG:
         return False
-    if 'shiny gold' in bag:
+    if bag == SHINY_GOLD_BAG:
         return True
     for bag_count in bag_counts[bag]:
         if contains_shiny_gold(bag_count.name, bag_counts):
@@ -40,7 +44,7 @@ def contains_shiny_gold(bag, bag_counts):
 
 
 def get_count(bag, bag_counts):
-    if bag == 'no other bag':
+    if bag == NO_OTHER_BAG:
         return 0
     return (
         sum(
@@ -56,10 +60,10 @@ def part1(text):
     return sum(
         contains_shiny_gold(bag, bag_counts)
         for bag in list(bag_counts)
-        if bag != 'shiny gold bag'
+        if bag != SHINY_GOLD_BAG
     )
 
 
 def part2(text):
     bag_counts = get_bag_counts(text)
-    return get_count('shiny gold bag', bag_counts) - 1
+    return get_count(SHINY_GOLD_BAG, bag_counts) - 1
