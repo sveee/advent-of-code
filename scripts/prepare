@@ -6,6 +6,7 @@ from pathlib import Path
 
 import click
 import yaml
+
 from advent_of_code.api import get_problem_soup
 
 

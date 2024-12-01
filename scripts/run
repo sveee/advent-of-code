@@ -10,9 +10,9 @@ from typing import Any
 
 import click
 import yaml
-from advent_of_code.api import (get_full_input, get_problem_soup,
-                                submit_solution)
 from bs4 import BeautifulSoup
+
+from advent_of_code.api import get_full_input, get_problem_soup, submit_solution
 
 
 class Solution(Enum):
