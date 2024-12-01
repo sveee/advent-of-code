@@ -8,5 +8,5 @@ regex = "1.7"
 itertools = "0.10"
 
 [[bin]]
-name = "day01"
-path = "src/day01.rs"
+name = "01"
+path = "src/01.rs"

@@ -49,7 +49,7 @@ class RustRunner(Runner):
         super().__init__(year, day)
         self.binary_path = os.path.join(
             os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
-            f'{year}/rust/target/debug/day{day:02d}',
+            f'{year}/rust/target/debug/{day:02d}',
         )
         assert os.path.exists(self.binary_path), f'{self.binary_path} does not exist'
         self.input_file = os.path.join(

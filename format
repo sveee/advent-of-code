@@ -1,2 +1,2 @@
-poetry run isort .
+poetry run isort . --profile black
 poetry run black -S .
