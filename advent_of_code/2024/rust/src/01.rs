@@ -11,8 +11,7 @@ pub fn part1(input: &str) -> i32 {
 
     left.sort();
     right.sort();
-    let result: i32 = left.iter().zip(right.iter()).map(|(a, b)| (a - b).abs()).sum();
-    result
+    left.iter().zip(right.iter()).map(|(a, b)| (a - b).abs()).sum()
 }
 
 pub fn part2(input: &str) -> i32 {
@@ -27,8 +26,7 @@ pub fn part2(input: &str) -> i32 {
     for value in right {
         *right_counts.entry(value).or_insert(0) += 1;
     }
-    let result: i32 = left.iter().map(|a| a * (right_counts.get(a).unwrap_or(&0))).sum();
-    result
+    left.iter().map(|a| a * (right_counts.get(a).unwrap_or(&0))).sum()
 }
 
 
