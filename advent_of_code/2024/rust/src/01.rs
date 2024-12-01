@@ -11,7 +11,7 @@ pub fn part1(input: &str) -> i32 {
 
     left.sort();
     right.sort();
-    left.iter().zip(right.iter()).map(|(a, b)| (a - b).abs()).sum()
+    left.iter().zip(right).map(|(a, b)| (a - b).abs()).sum()
 }
 
 pub fn part2(input: &str) -> i32 {
@@ -22,11 +22,11 @@ pub fn part2(input: &str) -> i32 {
             Some((numbers.next()?, numbers.next()?))
         })
         .unzip();
-    let mut right_counts: HashMap<i32, i32> = HashMap::new();
+    let mut right_counts = HashMap::<i32, i32>::new();
     for value in right {
         *right_counts.entry(value).or_insert(0) += 1;
     }
-    left.iter().map(|a| a * (right_counts.get(a).unwrap_or(&0))).sum()
+    left.iter().map(|left| left * (right_counts.get(left).unwrap_or(&0))).sum()
 }
 
 
