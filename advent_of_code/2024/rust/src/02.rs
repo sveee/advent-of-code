@@ -53,7 +53,7 @@ fn part2(text: &str) -> usize {
             let level: Vec<i32> = line.split_whitespace()
                                       .map(|num| num.parse().unwrap())
                                       .collect();
-            is_safe(&level)  || is_almost_safe(&level)
+            is_safe(&level) || is_almost_safe(&level)
         })
         .filter(|&is_safe| is_safe)
         .count()
