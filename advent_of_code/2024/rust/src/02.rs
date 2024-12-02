@@ -1,29 +1,8 @@
 
 fn is_safe(level: &Vec<i32>) -> bool {
-    let all_diff_valid = level.windows(2).all(|pair| {
-        if let [a, b] = pair {
-            (1..=3).contains(&(a - b).abs())
-        } else {
-            false
-        }
-    });
-
-    let all_increasing = level.windows(2).all(|pair| {
-        if let [a, b] = pair {
-            a < b
-        } else {
-            false
-        }
-    });
-
-    let all_decreasing = level.windows(2).all(|pair| {
-        if let [a, b] = pair {
-            a > b
-        } else {
-            false
-        }
-    });
-
+    let all_diff_valid = level.windows(2).all(|pair| matches!(pair, &[a, b] if(1..=3).contains(&(a - b).abs())));
+    let all_increasing = level.windows(2).all(|pair| matches!(pair, &[a, b] if a < b));
+    let all_decreasing = level.windows(2).all(|pair| matches!(pair, &[a, b] if a > b));
     all_diff_valid && (all_increasing || all_decreasing)
 }
 
