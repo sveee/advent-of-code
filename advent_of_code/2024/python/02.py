@@ -6,9 +6,7 @@ def is_safe(level):
 
 
 def is_almost_safe(level):
-    return any(
-        is_safe(level[:i] + level[i + 1 :]) for i in range(len(level))
-    )
+    return any(is_safe(level[:i] + level[i + 1 :]) for i in range(len(level)))
 
 
 def part1(text):
