@@ -2,26 +2,26 @@
 import re
 
 def part1(text):
-    t = 0
+    total = 0
     for expr in re.findall(
         r'mul\(\d+,\d+\)', text
     ):
-        a, b = re.findall('\d+', expr)
-        t += int(a) * int(b)
-    return t
+        left, right = re.findall('\d+', expr)
+        total += int(left) * int(right)
+    return total
 
 def part2(text):
-    t = 0
-    do = True
+    total = 0
+    enabled = True
     for expr in re.findall(
         r'mul\(\d+,\d+\)|do\(\)|don\'t\(\)', text
     ):
         if expr == 'do()':
-            do = True 
+            enabled = True 
         elif expr == 'don\'t()':
-            do = False
+            enabled = False
         else:
-            if do:
-                a, b = re.findall('\d+', expr)
-                t += int(a) * int(b)
-    return t
+            if enabled:
+                left, right = re.findall('\d+', expr)
+                total += int(left) * int(right)
+    return total
