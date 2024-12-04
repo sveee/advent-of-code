@@ -10,12 +10,11 @@ from typing import Any
 
 import click
 import yaml
+from advent_of_code.api import get_problem_input_data, get_problem_soup, submit_solution
 from bs4 import BeautifulSoup
 
-from advent_of_code.api import get_full_input, get_problem_soup, submit_solution
 
-
-class Solution(Enum):
+class Part(Enum):
     PART1 = 'part1'
     PART2 = 'part2'
 
@@ -26,7 +25,7 @@ class Runner(ABC):
         self.day = day
 
     @abstractmethod
-    def run(self, part: Solution, input_data: str, **kwargs: Any) -> str: ...
+    def run(self, part: Part, input_data: str, **kwargs: Any) -> str: ...
 
 
 class Language(Enum):
@@ -39,10 +38,10 @@ class PythonRunner(Runner):
         super().__init__(year, day)
         self.module = import_module(f'advent_of_code.{year}.python.{day:02d}')
 
-    def run(self, part: Solution, input_data: str, **kwargs: Any) -> str:
+    def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
         part_func = getattr(self.module, part.value, None)
         return str(part_func(input_data, **kwargs))
-    
+
 
 class RustRunner(Runner):
     def __init__(self, year: int, day: int):
@@ -57,7 +56,7 @@ class RustRunner(Runner):
             f'{year}/rust/inputs/{day:02d}.txt',
         )
 
-    def run(self, part: Solution, input_data: str, **kwargs: Any) -> str:
+    def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
         with open(self.input_file, 'w') as f:
             f.write(input_data)
 
@@ -83,6 +82,9 @@ language_runner_map = {
 
 
 class ProblemSolver:
+    GREEN = '\033[92m'
+    RESET = '\033[0m'
+
     def __init__(self, runner: Runner):
         self.runner = runner
         self.test_data = self.read_test_data()
@@ -108,7 +110,7 @@ class ProblemSolver:
         )
 
     def run_test(
-        self, test_index: int, part: Solution, test_case: dict[str, Any]
+        self, test_index: int, part: Part, test_case: dict[str, Any]
     ) -> bool:
         input_data = test_case.pop('input')
         expected_output = str(test_case.pop('answer'))
@@ -120,7 +122,7 @@ class ProblemSolver:
 
     def all_tests_pass(self) -> bool:
         all_tests_pass = True
-        for part in Solution:
+        for part in Part:
             if part.value in self.test_data:
                 for test_index, test_case in enumerate(
                     self.test_data[part.value], start=1
@@ -128,23 +130,32 @@ class ProblemSolver:
                     all_tests_pass &= self.run_test(test_index, part, test_case)
         return all_tests_pass
 
-    def get_n_parts_solved(self) -> int:
+    def fetch_existing_answers(self) -> dict[Part, str]:
         soup = get_problem_soup(self.runner.year, self.runner.day)
-        n_parts_solved = len(re.findall('Your puzzle answer was', soup.text))
-        return n_parts_solved
+        answer_ps = soup.find_all('p')
+        answers = [
+            p.find('code').text
+            for p in answer_ps
+            if p.text.startswith('Your puzzle answer was')
+        ]
+        return {
+            part: answer
+            for part, answer in zip([Part.PART1, Part.PART2], answers)
+        }
 
-    def display_solutions(self):
+    def display_runs(self, answers: dict[Part, str]) -> None:
         print('Problem already solved!')
-        full_input = get_full_input(self.runner.year, self.runner.day)
-        for part in Solution:
-            print(f'{part.value}:', self.runner.run(part, full_input))
-
-    def get_solution_answer(self) -> str:
-        full_input = get_full_input(self.runner.year, self.runner.day)
-        n_parts_solved = self.get_n_parts_solved()
-        if n_parts_solved == 0:
-            return self.runner.run(Solution.PART1, full_input)
-        return self.runner.run(Solution.PART2, full_input)
+        full_input = get_problem_input_data(self.runner.year, self.runner.day)
+        for part in Part:
+            answer = self.runner.run(part, full_input)
+            print(
+                f'{part.value}:',
+                (
+                    answer
+                    if answer == answers[part]
+                    else self._equal_status(answer, answers[part])
+                ),
+            )
 
     def submit_and_display_response(self, answer: str, level: int) -> None:
         response = submit_solution(
@@ -157,16 +168,23 @@ class ProblemSolver:
         print(re.sub(r'\s+', ' ', soup.find('article').text))
 
     def solve(self) -> None:
+        print(f'{self.GREEN}[Test]{self.RESET}')
         if not self.all_tests_pass():
             return
-        n_parts_solved = self.get_n_parts_solved()
-        if n_parts_solved == 2:
-            self.display_solutions()
-            return
-        answer = self.get_solution_answer()
-        if not answer:
-            return
-        self.submit_and_display_response(answer=answer, level=n_parts_solved + 1)
+        print(f'{self.GREEN}[Submit]{self.RESET}')
+        answers = self.fetch_existing_answers()
+        if len(answers) == 2:
+            self.display_solutions(answers)
+        else:
+            problem_input_data = get_problem_input_data(
+                self.runner.year, self.runner.day
+            )
+            answer_to_submit = self.runner.run(
+                Part.PART1 if len(answers) == 0 else Part.PART2,
+                problem_input_data,
+            )
+            level = len(answers) + 1
+            self.submit_and_display_response(answer=answer_to_submit, level=level)
 
 
 @click.command()

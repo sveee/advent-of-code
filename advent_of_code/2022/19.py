@@ -5,9 +5,8 @@ from dataclasses import dataclass
 from functools import reduce
 from typing import List, Set
 
-from tqdm import tqdm
-
 from advent_of_code.api import get_input
+from tqdm import tqdm
 
 text = get_input(day=19, year=2022)
 

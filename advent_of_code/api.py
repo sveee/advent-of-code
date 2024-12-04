@@ -22,7 +22,7 @@ def post_request(url: str, data: Dict[str, Any]) -> str:
     ).text
 
 
-def get_full_input(year: int, day: int) -> str:
+def get_problem_input_data(year: int, day: int) -> str:
     input_text = get_request(f'https://adventofcode.com/{year}/day/{day}/input')
     if input_text.endswith('\n'):
         input_text = input_text[:-1]

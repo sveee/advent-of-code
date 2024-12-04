@@ -6,7 +6,6 @@ from pathlib import Path
 
 import click
 import yaml
-
 from advent_of_code.api import get_problem_soup
 
 
@@ -48,7 +47,9 @@ def get_tests(year: int, day: int) -> list[TestCase]:
 
 def create_python_file(year: int, day: int):
     """Creates the Python file for the given day if it doesn't exist."""
-    python_file_path = Path(f'{os.path.dirname(__file__)}/../advent_of_code/{year}/python/{day:02d}.py')
+    python_file_path = Path(
+        f'{os.path.dirname(__file__)}/../advent_of_code/{year}/python/{day:02d}.py'
+    )
     if not python_file_path.exists():
         python_file_path.parent.mkdir(parents=True, exist_ok=True)
         python_file_path.write_text(
@@ -65,7 +66,9 @@ def create_python_file(year: int, day: int):
 def main(year: int, day: int):
     configure_yaml_multiline_dump()
 
-    test_config_path = Path(f'{os.path.dirname(__file__)}/../advent_of_code/{year}/tests/{day:02d}.yml')
+    test_config_path = Path(
+        f'{os.path.dirname(__file__)}/../advent_of_code/{year}/tests/{day:02d}.yml'
+    )
     test_data = {}
     # Load existing test data if the file exists
     if test_config_path.exists():
