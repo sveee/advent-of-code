@@ -16,17 +16,19 @@ def match_outcome(c1, c2):
     return 'draw' if c1 == c2 else 'win' if what_beats[c2] == c1 else 'lost'
 
 
-score1 = 0
-score2 = 0
-for line in text.splitlines():
-    first, second = line.split()
-    you, me = first_map[first], second_map1[second]
-    score1 += choice_score[me] + outcome_score[match_outcome(me, you)]
-    me = next(
-        choice
-        for choice in choices
-        if match_outcome(choice, you) == second_map2[second]
-    )
-    score2 += choice_score[me] + outcome_score[second_map2[second]]
-print(score1)
-print(score2)
+def part1(text):
+    score = 0
+    for line in text.splitlines():
+        first, second = line.split()
+        you, me = first_map[first], second_map1[second]
+        score += choice_score[me] + outcome_score[match_outcome(me, you)]
+    return score
+
+
+def part2(text):
+    score = 0
+    for line in text.splitlines():
+        second = line.split()
+        me = second_map1[second]
+        score += choice_score[me] + outcome_score[second_map2[second]]
+    return score
