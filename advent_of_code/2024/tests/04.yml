@@ -1,0 +1,63 @@
+part1:
+- input: |-
+    .X..
+    XMAS
+    .A..
+    .S..
+  answer: '2'
+- input: |-
+    ..X...
+    .SAMX.
+    .A..A.
+    XMAS.S
+    .X....
+  answer: '4'
+- input: |-
+    ....XXMAS.
+    .SAMXMS...
+    ...S..A...
+    ..A.A.MS.X
+    XMASAMX.MM
+    X.....XA.A
+    S.S.S.S.SS
+    .A.A.A.A.A
+    ..M.M.M.MM
+    .X.X.XMASX
+  answer: '18'
+- input: |-
+    MMMSXXMASM
+    MSAMXMSMSA
+    AMXSXMAAMM
+    MSAMASMSMX
+    XMASAMXAMM
+    XXAMMXXAMA
+    SMSMSASXSS
+    SAXAMASAAA
+    MAMMMXMMMM
+    MXMXAXMASX
+  answer: '18'
+part2:
+- input: |-
+    .M.S......
+    ..A..MSMS.
+    .M.S.MAA..
+    ..A.ASMSM.
+    .M.S.M....
+    ..........
+    S.S.S.S.S.
+    .A.A.A.A..
+    M.M.M.M.M.
+    ..........
+  answer: '9'
+- input: |-
+    MMMSXXMASM
+    MSAMXMSMSA
+    AMXSXMAAMM
+    MSAMASMSMX
+    XMASAMXAMM
+    XXAMMXXAMA
+    SMSMSASXSS
+    SAXAMASAAA
+    MAMMMXMMMM
+    MXMXAXMASX
+  answer: '9'
