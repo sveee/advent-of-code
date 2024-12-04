@@ -30,14 +30,12 @@ def part2(text):
     grid = text.splitlines()
     n, m = len(grid), len(grid[0])
     xmas_count = 0
+    MAS = ['MAS', 'SAM']
     for x in range(n):
         for y in range(m):
             if x + 2 < n and y + 2 < m:
-                xmas_count += get_word_at((x, y), (1, 1), 3, grid) in [
-                    'MAS',
-                    'SAM',
-                ] and get_word_at((x + 2, y), (-1, 1), 3, grid) in [
-                    'MAS',
-                    'SAM',
-                ]
+                xmas_count += (
+                    get_word_at((x, y), (1, 1), 3, grid) in MAS
+                    and get_word_at((x + 2, y), (-1, 1), 3, grid) in MAS
+                )
     return xmas_count
