@@ -165,7 +165,10 @@ class ProblemSolver:
             day=self.runner.day,
         )
         soup = BeautifulSoup(response, features='html.parser')
-        print(re.sub(r'\s+', ' ', soup.find('article').text))
+        response = re.sub(r'\s+', ' ', soup.find('article').text)
+        status = '✅' if response.startswith('That\'s the right answer!') else '❌'
+        print(status)
+        print(response)
 
     def solve(self) -> None:
         print(f'{self.GREEN}[Test]{self.RESET}')
