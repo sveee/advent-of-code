@@ -1,6 +1,8 @@
-from advent_of_code.api import get_input
+def part1(text):
+    calories = list(sum(map(int, group.split())) for group in text.split('\n\n'))
+    return max(calories)
 
-text = get_input(day=1, year=2022)
-calories = list(sum(map(int, group.split())) for group in text.split('\n\n'))
-print(max(calories))
-print(sum(sorted(calories)[-3:]))
+
+def part2(text):
+    calories = list(sum(map(int, group.split())) for group in text.split('\n\n'))
+    return sum(sorted(calories)[-3:])

@@ -143,7 +143,7 @@ class ProblemSolver:
             for part, answer in zip([Part.PART1, Part.PART2], answers)
         }
 
-    def display_runs(self, answers: dict[Part, str]) -> None:
+    def display_solutions(self, answers: dict[Part, str]) -> None:
         print('Problem already solved!')
         full_input = get_problem_input_data(self.runner.year, self.runner.day)
         for part in Part:
