@@ -4,10 +4,10 @@ def get_fuel(mass):
 
 def get_total_fuel(mass):
     total = 0
-    mass = get_fuel(mass)
-    while mass > 0:
-        total += mass
-        mass = get_fuel(mass)
+    fuel = get_fuel(mass)
+    while fuel > 0:
+        total += fuel
+        fuel = get_fuel(fuel)
     return total
 
 
