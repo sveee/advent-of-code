@@ -18,7 +18,13 @@ fn order_pages(pages: &Vec<String>, rules: &HashMap<String, Vec<String>>) -> Vec
 
     let mut zero_in_degree: Vec<String> = in_degree
         .iter()
-        .filter_map(|(node, &degree)| if degree == 0 { Some(node.clone()) } else { None })
+        .filter_map(|(node, &degree)| {
+            if degree == 0 {
+                Some(node.clone())
+            } else {
+                None
+            }
+        })
         .collect();
 
     let mut ordered_pages: Vec<String> = Vec::new();
@@ -77,7 +83,6 @@ fn part1(text: &str) -> i32 {
 fn part2(text: &str) -> i32 {
     middle_page_number_sum(text, false)
 }
-
 
 fn main() {
     aoc2024::solve(part1, part2);

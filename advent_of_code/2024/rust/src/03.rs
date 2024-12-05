@@ -45,7 +45,6 @@ fn part2(text: &str) -> i32 {
     total
 }
 
-
 fn main() {
     aoc2024::solve(part1, part2);
 }

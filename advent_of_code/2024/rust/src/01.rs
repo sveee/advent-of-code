@@ -26,9 +26,10 @@ pub fn part2(input: &str) -> i32 {
     for value in right {
         *right_counts.entry(value).or_insert(0) += 1;
     }
-    left.iter().map(|left| left * (right_counts.get(left).unwrap_or(&0))).sum()
+    left.iter()
+        .map(|left| left * (right_counts.get(left).unwrap_or(&0)))
+        .sum()
 }
-
 
 fn main() {
     aoc2024::solve(part1, part2);

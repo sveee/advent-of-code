@@ -1,11 +1,15 @@
-
 use std::collections::HashSet;
 
 fn directions() -> Vec<(isize, isize)> {
     vec![
-        (-1, -1), (-1, 0), (-1, 1),
-        ( 0, -1),          ( 0, 1),
-        ( 1, -1), ( 1, 0), ( 1, 1),
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),
+        (0, -1),
+        (0, 1),
+        (1, -1),
+        (1, 0),
+        (1, 1),
     ]
 }
 
@@ -18,7 +22,7 @@ fn get_word_at(
     let (x, y) = (position.0 as isize, position.1 as isize);
     let (dx, dy) = direction;
     let mut word = String::new();
-    
+
     for i in 0..size as isize {
         let nx = x + dx * i;
         let ny = y + dy * i;
@@ -64,7 +68,8 @@ fn part2(text: &str) -> usize {
                     get_word_at(start_pos, (1, 1), 3, &grid),
                     get_word_at(check_pos, (-1, 1), 3, &grid),
                 ) {
-                    if mas_variants.contains(diag1.as_str()) && mas_variants.contains(diag2.as_str())
+                    if mas_variants.contains(diag1.as_str())
+                        && mas_variants.contains(diag2.as_str())
                     {
                         xmas_count += 1;
                     }
