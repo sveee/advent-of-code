@@ -1,10 +1,4 @@
-
-static DIRECTIONS: [(i32, i32); 4] = [
-    (-1, 0),
-    (0, 1),
-    (1, 0),
-    (0, -1),
-];
+static DIRECTIONS: [(i32, i32); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 
 fn within_bounds(x: i32, y: i32, n: i32, m: i32) -> bool {
     x >= 0 && x < n && y >= 0 && y < m
@@ -56,7 +50,11 @@ fn simulate_path(
         }
     }
 
-    if track_loop { 0 } else { visited.iter().filter(|&&v| v).count() as i32 }
+    if track_loop {
+        0
+    } else {
+        visited.iter().filter(|&&v| v).count() as i32
+    }
 }
 
 fn part1(text: &str) -> i32 {
@@ -69,7 +67,7 @@ fn part1(text: &str) -> i32 {
         .find(|&(x, y)| grid[x][y] == '^')
         .expect("No starting position found");
 
-    let mut visited = vec![false; n*m];
+    let mut visited = vec![false; n * m];
     simulate_path(sx as i32, sy as i32, 0, &grid, false, &mut visited, n, m)
 }
 
@@ -82,7 +80,7 @@ fn part2(text: &str) -> i32 {
         .find(|&(x, y)| grid[x][y] == '^')
         .expect("No starting position found");
 
-    let mut visited = vec![false; n*m*4];
+    let mut visited = vec![false; n * m * 4];
     let mut total = 0;
     for x in 0..n {
         for y in 0..m {
