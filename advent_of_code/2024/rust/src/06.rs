@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 
 static DIRECTIONS: [(i32, i32); 4] = [
     (-1, 0),
@@ -17,31 +16,35 @@ fn simulate_path(
     di: usize,
     grid: &[Vec<char>],
     track_loop: bool,
+    visited: &mut [bool],
+    n: usize,
+    m: usize,
 ) -> i32 {
-    let n = grid.len() as i32;
-    let m = grid[0].len() as i32;
+    visited.fill(false);
 
-    let mut visited_states = HashSet::new();
     let (mut x, mut y) = (sx, sy);
     let mut mdi = di;
+    let (n_i32, m_i32) = (n as i32, m as i32);
 
-    while within_bounds(x, y, n, m) {
+    while within_bounds(x, y, n_i32, m_i32) {
         let (dx, dy) = DIRECTIONS[mdi];
 
-        if track_loop {
-            let state = (x, y, dx, dy);
-            if visited_states.contains(&state) {
-                return 1;
-            }
-            visited_states.insert(state);
+        let state_idx = if track_loop {
+            (((x as usize) * m) + (y as usize)) * 4 + mdi
         } else {
-            let state = (x, y, 0, 0);
-            visited_states.insert(state);
+            (x as usize) * m + (y as usize)
+        };
+
+        if visited[state_idx] && track_loop {
+            return 1;
         }
+
+        visited[state_idx] = true;
 
         let nx = x + dx;
         let ny = y + dy;
-        if !within_bounds(nx, ny, n, m) {
+
+        if !within_bounds(nx, ny, n_i32, m_i32) {
             break;
         }
 
@@ -53,23 +56,21 @@ fn simulate_path(
         }
     }
 
-    if track_loop {
-        0
-    } else {
-        visited_states.len() as i32
-    }
+    if track_loop { 0 } else { visited.iter().filter(|&&v| v).count() as i32 }
 }
 
 fn part1(text: &str) -> i32 {
     let grid: Vec<Vec<char>> = text.lines().map(|line| line.chars().collect()).collect();
     let n = grid.len();
     let m = grid[0].len();
+
     let (sx, sy) = (0..n)
         .flat_map(|x| (0..m).map(move |y| (x, y)))
         .find(|&(x, y)| grid[x][y] == '^')
         .expect("No starting position found");
 
-    simulate_path(sx as i32, sy as i32, 0, &grid, false)
+    let mut visited = vec![false; n*m];
+    simulate_path(sx as i32, sy as i32, 0, &grid, false, &mut visited, n, m)
 }
 
 fn part2(text: &str) -> i32 {
@@ -81,12 +82,13 @@ fn part2(text: &str) -> i32 {
         .find(|&(x, y)| grid[x][y] == '^')
         .expect("No starting position found");
 
+    let mut visited = vec![false; n*m*4];
     let mut total = 0;
     for x in 0..n {
         for y in 0..m {
             if grid[x][y] == '.' {
                 grid[x][y] = '#';
-                total += simulate_path(sx as i32, sy as i32, 0, &grid, true);
+                total += simulate_path(sx as i32, sy as i32, 0, &grid, true, &mut visited, n, m);
                 grid[x][y] = '.';
             }
         }
