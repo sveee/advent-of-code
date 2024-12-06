@@ -109,7 +109,7 @@ class ProblemSolver:
             else f'❌ {generated} != {expected}'
         )
 
-    def run_test(
+    def test_pass(
         self, test_index: int, part: Part, test_case: dict[str, Any]
     ) -> bool:
         input_data = test_case.pop('input')
@@ -121,14 +121,14 @@ class ProblemSolver:
         return generated_output == expected_output
 
     def all_tests_pass(self) -> bool:
-        all_tests_pass = True
         for part in Part:
             if part.value in self.test_data:
                 for test_index, test_case in enumerate(
                     self.test_data[part.value], start=1
                 ):
-                    all_tests_pass &= self.run_test(test_index, part, test_case)
-        return all_tests_pass
+                    if not self.test_pass(test_index, part, test_case):
+                        return False
+        return True
 
     def fetch_existing_answers(self) -> dict[Part, str]:
         soup = get_problem_soup(self.runner.year, self.runner.day)
