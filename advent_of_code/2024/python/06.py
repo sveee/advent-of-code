@@ -37,6 +37,40 @@ def part1(text):
     return len(visited)
 
 
+def is_there_loop(p, grid):
+    n, m = len(grid), len(grid[0])
+    di = 0 
+    visited = set()
+    x, y = p
+    while within_bounds((x, y), (n, m)):
+        dx, dy = directions[di][0], directions[di][1]
+        if (x, y, dx, dy) in visited:
+            return True
+        visited.add((x, y, dx, dy))
+        nx, ny = x + dx, y + dy
+        if not within_bounds((nx, ny), (n, m)):
+            break
+        if grid[nx][ny] == '#':
+            di = (di + 1) % 4
+        else:
+            x, y = nx, ny
+    return False
+
 
 def part2(text):
-    pass
+    grid = list(map(list, text.splitlines()))
+    n, m = len(grid), len(grid[0])
+    total = 0
+    sx, sy = next(
+        (x, y)
+        for x in range(n)
+        for y in range(m)
+        if grid[x][y] == '^'
+    )
+    for x in range(n):
+        for y in range(m):
+            if grid[x][y] == '.':
+                grid[x][y] = '#'
+                total += is_there_loop((sx, sy), grid)
+                grid[x][y] = '.'
+    return total
