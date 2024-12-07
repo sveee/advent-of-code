@@ -34,11 +34,11 @@ fn can_be_made_true(numbers: &[i64], total: i64, n_ops: i64) -> bool {
                 }
                 _ => {}
             }
-            if result > (total) {
+            if result > total {
                 break;
             }
         }
-        if result == (total) {
+        if result == total {
             return true;
         }
     }
