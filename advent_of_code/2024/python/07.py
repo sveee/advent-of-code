@@ -15,7 +15,8 @@ def can_be_made_true(numbers, total, n_ops):
             if op == 0:
                 result *= numbers[i + 1]
             elif op == 1:
-                result += numbers[i + 1]../advent_of_code/2024/python/07.py
+                result += numbers[i + 1]
+            elif op == 2:
                 result = int(str(result) + str(numbers[i + 1]))
         if result == total:
             return True
