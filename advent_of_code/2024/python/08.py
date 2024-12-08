@@ -27,7 +27,26 @@ def part1(text):
 
 
 
-
 def part2(text):
-    pass
+    grid = text.splitlines()
+    n, m = len(grid), len(grid[0])
+    antennas = defaultdict(list)
+    for x, line in enumerate(grid):
+        for y, v in enumerate(line):
+            if v != '.':
+                antennas[v].append((x, y))
+
+    locations = set()
+    for group in antennas.values():
+        for a1, a2 in combinations(group, 2):
+            d = a2[0] - a1[0], a2[1] - a1[1]
+            an = a1
+            while within_bounds(*an, n, m ):
+                locations.add(an)
+                an = an[0] - d[0], an[1] - d[1]
+            an = a2
+            while within_bounds(*an, n, m ):
+                locations.add(an)
+                an = an[0] + d[0], an[1] + d[1]
+    return len(locations)
 
