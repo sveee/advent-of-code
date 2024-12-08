@@ -9,6 +9,12 @@ class Point(NamedTuple):
 class Segment(NamedTuple):
     start: Point
     step: Point
+    steps: int
+
+
+class Intersection(NamedTuple):
+    point: Point
+    steps: int
 
 
 direction_map = {
@@ -20,18 +26,18 @@ direction_map = {
 
 
 def get_wire_segments(path):
-    x, y = 0, 0
+    x, y, s = 0, 0, 0
     segments = []
     for step in path.split(','):
         dir, size = step[0], int(step[1:])
         dx, dy = direction_map[dir]
         dx, dy = size * dx, size * dy
-        segments.append(Segment(Point(x, y), Point(dx, dy)))
-        x, y = x + dx, y + dy
+        segments.append(Segment(Point(x, y), Point(dx, dy), s))
+        x, y, s = x + dx, y + dy, s + abs(dx) + abs(dy)
     return segments
 
 
-def get_intersection(segment1, segment2):
+def get_intersection(segment1: Segment, segment2: Segment):
     if (segment1.step.x != 0) == (segment2.step.x != 0):
         return None
 
@@ -51,7 +57,13 @@ def get_intersection(segment1, segment2):
     if not (start_x < segment2.start.x < end_x and start_y < segment1.start.y < end_y):
         return None
 
-    return segment2.start.x, segment1.start.y
+    return Intersection(
+        Point(segment2.start.x, segment1.start.y),
+        segment1.steps
+        + abs(segment1.start.x - segment2.start.x)
+        + segment2.steps
+        + abs(segment2.start.y - segment1.start.y),
+    )
 
 
 def part1(text):
@@ -59,7 +71,7 @@ def part1(text):
     wire_segments1 = get_wire_segments(wire_path1)
     wire_segments2 = get_wire_segments(wire_path2)
     return min(
-        abs(intersection[0]) + abs(intersection[1])
+        abs(intersection.point.x) + abs(intersection.point.y)
         for segment1 in wire_segments1
         for segment2 in wire_segments2
         if (intersection := get_intersection(segment1, segment2))
@@ -67,4 +79,12 @@ def part1(text):
 
 
 def part2(text):
-    pass
+    wire_path1, wire_path2 = text.splitlines()
+    wire_segments1 = get_wire_segments(wire_path1)
+    wire_segments2 = get_wire_segments(wire_path2)
+    return min(
+        intersection.steps
+        for segment1 in wire_segments1
+        for segment2 in wire_segments2
+        if (intersection := get_intersection(segment1, segment2))
+    )
