@@ -10,7 +10,7 @@ from typing import Any
 
 import click
 import yaml
-from advent_of_code.api import get_problem_input_data, get_problem_soup, submit_solution
+from advent_of_code.api import get_problem_soup, submit_solution
 from bs4 import BeautifulSoup
 
 
@@ -53,7 +53,7 @@ class RustRunner(Runner):
         assert os.path.exists(self.binary_path), f'{self.binary_path} does not exist'
         self.input_file = os.path.join(
             os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
-            f'{year}/rust/inputs/{day:02d}.txt',
+            f'{year}/input/{day:02d}.txt',
         )
 
     def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
@@ -142,12 +142,20 @@ class ProblemSolver:
             part: answer
             for part, answer in zip([Part.PART1, Part.PART2], answers)
         }
+    
+    def get_problem_input(self) -> str:
+        self.input_data_path = os.path.join(os.path.dirname(__file__), f'../advent_of_code/{self.runner.year}/input/{self.runner.day:02d}.txt')
+        assert os.path.exists(self.input_data_path), f'{self.input_data_path} does not exist'
+        with open(self.input_data_path) as f:
+            input_data = f.read()
+        return input_data
+
 
     def display_solutions(self, answers: dict[Part, str]) -> None:
         print('Problem already solved!')
-        full_input = get_problem_input_data(self.runner.year, self.runner.day)
+        problem_input = self.get_problem_input()
         for part in Part:
-            answer = self.runner.run(part, full_input)
+            answer = self.runner.run(part, problem_input)
             print(
                 f'{part.value}:',
                 (
@@ -179,12 +187,10 @@ class ProblemSolver:
         if len(answers) == 2:
             self.display_solutions(answers)
         else:
-            problem_input_data = get_problem_input_data(
-                self.runner.year, self.runner.day
-            )
+            problem_input = self.get_problem_input()
             answer_to_submit = self.runner.run(
                 Part.PART1 if len(answers) == 0 else Part.PART2,
-                problem_input_data,
+                problem_input,
             )
             level = len(answers) + 1
             self.submit_and_display_response(answer=answer_to_submit, level=level)

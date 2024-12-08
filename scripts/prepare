@@ -6,7 +6,7 @@ from pathlib import Path
 
 import click
 import yaml
-from advent_of_code.api import get_problem_soup
+from advent_of_code.api import get_problem_input_data, get_problem_soup
 
 
 @dataclass(frozen=True)
@@ -53,9 +53,23 @@ def create_python_file(year: int, day: int):
     if not python_file_path.exists():
         python_file_path.parent.mkdir(parents=True, exist_ok=True)
         python_file_path.write_text(
-            "\ndef part1(text):\n    pass\n\ndef part2(text):\n    pass\n"
+            '\ndef part1(text):\n    pass\n\ndef part2(text):\n    pass\n'
         )
         print(f'Created {python_file_path}')
+
+
+def download_input_data(year: int, day: int):
+    """Download input data for the problem"""
+    input_data_file_path = Path(
+        f'{os.path.dirname(__file__)}/../advent_of_code/{year}/input/{day:02d}.txt'
+    )
+    if not input_data_file_path.exists():
+        input_data_file_path.parent.mkdir(parents=True, exist_ok=True)
+        input_data = get_problem_input_data(year, day)
+        input_data_file_path.write_text(
+            input_data
+        )
+        print(f'Downloaded input: {input_data_file_path}')
 
 
 @click.command()
@@ -92,6 +106,7 @@ def main(year: int, day: int):
 
     # Ensure the Python file exists
     create_python_file(year, day)
+    download_input_data(year, day)
 
 
 if __name__ == '__main__':
