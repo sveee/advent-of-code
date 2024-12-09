@@ -2,6 +2,7 @@
 import os
 import re
 import subprocess
+import tempfile
 from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import Enum
@@ -51,23 +52,18 @@ class RustRunner(Runner):
             f'{year}/rust/target/debug/{day:02d}',
         )
         assert os.path.exists(self.binary_path), f'{self.binary_path} does not exist'
-        self.input_file = os.path.join(
-            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
-            f'{year}/input/{day:02d}.txt',
-        )
 
     def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
-        with open(self.input_file, 'w') as f:
-            f.write(input_data)
-
         try:
-            # Call the Rust binary with the input file and part argument
-            result = subprocess.run(
-                [self.binary_path, part.value, self.input_file],
-                capture_output=True,
-                text=True,
-                check=True,
-            )
+            with tempfile.NamedTemporaryFile(mode='w+', delete=True) as tmp_file:
+                tmp_file.write(input_data)
+                tmp_file.flush()
+                result = subprocess.run(
+                    [self.binary_path, part.value, tmp_file.name],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
             return result.stdout.strip()
         except subprocess.CalledProcessError as e:
             print(f"Error running Rust binary: {e}")
