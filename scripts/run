@@ -35,7 +35,7 @@ class Language(Enum):
 
 
 class PythonRunner(Runner):
-    def __init__(self, year: int, day: int):
+    def __init__(self, year: int, day: int) -> None:
         super().__init__(year, day)
         self.module = import_module(f'advent_of_code.{year}.python.{day:02d}')
 
@@ -45,7 +45,7 @@ class PythonRunner(Runner):
 
 
 class RustRunner(Runner):
-    def __init__(self, year: int, day: int):
+    def __init__(self, year: int, day: int) -> None:
         super().__init__(year, day)
         self.binary_path = os.path.join(
             os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
@@ -81,7 +81,7 @@ class ProblemSolver:
     GREEN = '\033[92m'
     RESET = '\033[0m'
 
-    def __init__(self, runner: Runner):
+    def __init__(self, runner: Runner) -> None:
         self.runner = runner
         self.test_data = self.read_test_data()
 
