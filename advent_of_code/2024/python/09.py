@@ -17,7 +17,7 @@ def part1(text):
 
 
 @dataclass
-class Fragment:
+class File:
     id: int
     index: int
     size: int
@@ -28,16 +28,13 @@ EMPTY = -1
 
 def part2(text):
     disk_map = list(map(int, text))
-    disk = []
-    disk_index = 0
-    files, spaces = [], []
+    files, disk, disk_index = [], [], 0
     for index, size in enumerate(disk_map):
         if index % 2 == 0:
             disk.extend([index // 2] * size)
-            files.append(Fragment(index // 2, disk_index, size))
+            files.append(File(index // 2, disk_index, size))
         else:
             disk.extend([EMPTY] * size)
-            spaces.append(Fragment(-1, disk_index, size))
         disk_index += size
 
     for file in sorted(files, key=lambda x: x.id, reverse=True):
@@ -49,14 +46,14 @@ def part2(text):
                 end = start
                 while end < len(disk) and disk[end] == EMPTY:
                     end += 1
-                space_size = end - start
-                if file.size <= space_size:
+                if file.size <= end - start:
                     for index in range(start, start + file.size):
                         disk[index] = file.id
                     for index in range(file.index, file.index + file.size):
                         disk[index] = EMPTY
-                start = end
-                if file.size <= space_size:
+                    start = end
                     break
+                else:
+                    start = end
 
     return sum(index * value for index, value in enumerate(disk) if value >= 0)
