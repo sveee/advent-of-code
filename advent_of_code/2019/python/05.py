@@ -1,3 +1,7 @@
+def get_value(index, memory, mode):
+    return memory[memory[index]] if mode == 0 else memory[index]
+
+
 def run_program(memory, input):
     memory = memory.copy()
     index = 0
@@ -14,17 +18,32 @@ def run_program(memory, input):
                 memory[index + 1] = input
             index += 2
         elif op == 4:
-            output = str(memory[memory[index + 1]] if mode1 == 0 else memory[index + 1])
+            output = str(get_value(index + 1, memory, mode1))
             index += 2
         elif op in [1, 2]:
-            left = memory[memory[index + 1]] if mode1 == 0 else memory[index + 1]
-            right = memory[memory[index + 2]] if mode2 == 0 else memory[index + 2]
-            op %= 100
+            left = get_value(index + 1, memory, mode1)
+            right = get_value(index + 2, memory, mode2)
             result = left + right if op == 1 else left * right
             if mode3 == 0:
                 memory[memory[index + 3]] = result
             else:
                 memory[index + 3] = result
+            index += 4
+        elif op in [5, 6]:
+            value = get_value(index + 1, memory, mode1)
+            if value != 0 if op == 5 else value == 0:
+                index = get_value(index + 2, memory, mode2)
+            else:
+                index += 3
+        elif op in [7, 8]:
+            left, right = get_value(index + 1, memory, mode1), get_value(
+                index + 2, memory, mode2
+            )
+            condition = left < right if op == 7 else left == right
+            if mode3 == 0:
+                memory[memory[index + 3]] = int(condition)
+            else:
+                memory[index + 3] = int(condition)
             index += 4
         elif op == 99:
             break
@@ -39,5 +58,6 @@ def part1(text):
     return run_program(memory, 1)
 
 
-def part2(text):
-    pass
+def part2(text, system_id=5):
+    memory = list(map(int, text.split(',')))
+    return run_program(memory, system_id)
