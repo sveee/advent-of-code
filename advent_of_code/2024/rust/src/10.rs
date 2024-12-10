@@ -4,19 +4,17 @@ static DIRECTIONS: &[(isize, isize)] = &[(-1, 0), (1, 0), (0, -1), (0, 1)];
 
 fn within_bounds(x: isize, y: isize, grid: &[&str]) -> bool {
     let n = grid.len();
-    let m = if n == 0 { 0 } else { grid[0].len() };
+    let m = grid[0].len();
     x >= 0 && y >= 0 && (x as usize) < n && (y as usize) < m
 }
 
 fn trailhead_score(x: usize, y: usize, grid: &[&str]) -> HashSet<(usize, usize)> {
     let current = grid[x].as_bytes()[y];
-    if current == b'9' {
-        let mut set = HashSet::new();
-        set.insert((x, y));
-        return set;
-    }
-
     let mut total = HashSet::new();
+    if current == b'9' {
+        total.insert((x, y));
+        return total;
+    }
     for &(dx, dy) in DIRECTIONS.iter() {
         let nx = x as isize + dx;
         let ny = y as isize + dy;
