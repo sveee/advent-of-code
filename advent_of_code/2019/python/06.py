@@ -19,7 +19,6 @@ def part1(text):
 
 
 def get_path(node, prev):
-    print(node, prev)
     path = []
     while node != 'COM':
         path.append(node)
