@@ -1,5 +1,5 @@
 part1:
-- input: |2-
+- input: |-
     COM)B
     B)C
     C)D
@@ -12,3 +12,19 @@ part1:
     J)K
     K)L
   answer: 42
+part2:
+- input: |-
+    COM)B
+    B)C
+    C)D
+    D)E
+    E)F
+    B)G
+    G)H
+    D)I
+    E)J
+    J)K
+    K)L
+    K)YOU
+    I)SAN
+  answer: 4

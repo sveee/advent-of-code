@@ -18,5 +18,23 @@ def part1(text):
     return sum(n_orbits.values())
 
 
+def get_path(node, prev):
+    print(node, prev)
+    path = []
+    while node != 'COM':
+        path.append(node)
+        node = prev[node]
+    return path[::-1]
+
+
 def part2(text):
-    pass
+    prev = {}
+    for line in text.splitlines():
+        left, right = line.split(')')
+        prev[right] = left
+    path1 = get_path('YOU', prev)
+    path2 = get_path('SAN', prev)
+    index = 0
+    while path1[index] == path2[index]:
+        index += 1
+    return len(path1) + len(path2) - 2 * index - 2
