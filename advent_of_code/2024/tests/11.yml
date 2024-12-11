@@ -1,0 +1,25 @@
+part1:
+- input: '0 1 10 99 999'
+  times: 1
+  answer: 7
+- input: '125 17'
+  times: 1
+  answer: 3
+- input: '125 17'
+  times: 2
+  answer: 4
+- input: '125 17'
+  times: 3
+  answer: 5
+- input: '125 17'
+  times: 4
+  answer: 9
+- input: '125 17'
+  times: 5
+  answer: 13
+- input: '125 17'
+  times: 6
+  answer: 22
+- input: '125 17'
+  times: 25
+  answer: 55312
