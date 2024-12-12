@@ -1,0 +1,27 @@
+part1:
+- input: |-
+    AAAA
+    BBCD
+    BBCC
+    EEEC
+  answer: '140'
+- input: |-
+    OOOOO
+    OXOXO
+    OOOOO
+    OXOXO
+    OOOOO
+  answer: '772'
+- input: |-
+    RRRRIICCFF
+    RRRRIICCCF
+    VVRRRCCFFF
+    VVRCCCJFFF
+    VVVVCJJCFE
+    VVIVCCJJEE
+    VVIIICJJEE
+    MIIIIIJJEE
+    MIIISIJEEE
+    MMMISSJEEE
+  answer: '1930'
+
