@@ -24,4 +24,44 @@ part1:
     MIIISIJEEE
     MMMISSJEEE
   answer: '1930'
-
+part2:
+- input: |-
+    AAAA
+    BBCD
+    BBCC
+    EEEC
+  answer: '80'
+- input: |-
+    OOOOO
+    OXOXO
+    OOOOO
+    OXOXO
+    OOOOO
+  answer: '436'
+- input: |-
+    EEEEE
+    EXXXX
+    EEEEE
+    EXXXX
+    EEEEE
+  answer: '236'
+- input: |-
+    AAAAAA
+    AAABBA
+    AAABBA
+    ABBAAA
+    ABBAAA
+    AAAAAA
+  answer: '368'
+- input: |-
+    RRRRIICCFF
+    RRRRIICCCF
+    VVRRRCCFFF
+    VVRCCCJFFF
+    VVVVCJJCFE
+    VVIVCCJJEE
+    VVIIICJJEE
+    MIIIIIJJEE
+    MIIISIJEEE
+    MMMISSJEEE
+  answer: '1206'
