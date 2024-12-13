@@ -12,8 +12,8 @@ def min_tokens(da, db, p):
     # da.y, db.y      nb       p.y
 
     D = da.x * db.y - da.y * db.x
-    A = p.x  * db.y - p.y  * db.x
-    B = da.x *  p.y - da.y *  p.x
+    A = p.x * db.y - p.y * db.x
+    B = da.x * p.y - da.y * p.x
 
     if D < 0:
         A *= -1
@@ -22,8 +22,9 @@ def min_tokens(da, db, p):
 
     if A % D == 0 and B % D == 0:
         return 3 * A // D + B // D
-    
+
     return 0
+
 
 def get_machines(text):
     machines = []
@@ -35,16 +36,15 @@ def get_machines(text):
         machines.append((da, db, p))
     return machines
 
+
 def part1(text):
-    return sum(
-        min_tokens(da, db, p)
-        for da, db, p in get_machines(text)
-    )
+    return sum(min_tokens(da, db, p) for da, db, p in get_machines(text))
+
 
 N = 10000000000000
 
+
 def part2(text):
     return sum(
-        min_tokens(da, db, Point(p.x+N,p.y+N))
-        for da, db, p in get_machines(text)
+        min_tokens(da, db, Point(p.x + N, p.y + N)) for da, db, p in get_machines(text)
     )
