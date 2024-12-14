@@ -5,6 +5,8 @@ from typing import NamedTuple, Self
 
 from tqdm import tqdm
 
+DIRECTIONS = [(x, y) for x in range(-1, 2) for y in range(-1, 2) if x != 0 or y != 0]
+
 
 class Point(NamedTuple):
     x: int
@@ -55,16 +57,6 @@ def part1(text, w=101, h=103, k=100):
         lambda a, b: a * b,
         n_per_quadrant.values(),
     )
-
-
-def move(p, v, s):
-    return Point(
-        (p.x + v.x + s.x) % s.x,
-        (p.y + v.y + s.y) % s.y,
-    )
-
-
-DIRECTIONS = [(x, y) for x in range(-1, 2) for y in range(-1, 2) if x != 0 or y != 0]
 
 
 def count_components(positions, size):
