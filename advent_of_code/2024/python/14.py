@@ -64,7 +64,7 @@ def move(p, v, s):
     )
 
 
-directions = [(x, y) for x in range(-1, 2) for y in range(-1, 2) if x != 0 or y != 0]
+DIRECTIONS = [(x, y) for x in range(-1, 2) for y in range(-1, 2) if x != 0 or y != 0]
 
 
 def count_components(positions, size):
@@ -75,7 +75,7 @@ def count_components(positions, size):
         visited.add(p)
         while stack:
             p = stack.pop()
-            for dx, dy in directions:
+            for dx, dy in DIRECTIONS:
                 np = Point(p.x + dx, p.y + dy)
                 if (
                     0 <= np.x < size.x
