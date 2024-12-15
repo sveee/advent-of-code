@@ -13,8 +13,11 @@ class Point(NamedTuple):
 
 
 BOX = 'O'
+LEFT_BOX = '['
+RIGHT_BOX = ']'
 ROBOT = '@'
 SPACE = '.'
+WALL = '#'
 
 DIRECTIONS = {
     '<': Point(0, -1),
@@ -32,9 +35,40 @@ def gps_coords(grid):
     total = 0
     for x in range(len(grid)):
         for y in range(len(grid[0])):
-            if grid[x][y] == BOX:
+            if grid[x][y] in [BOX, LEFT_BOX]:
                 total += 100 * x + y
     return total
+
+
+def find_push_group(r, d, grid):
+    if not within_bounds(r, grid):
+        return set()
+
+    stack = [r]
+    group = set()
+    while len(stack) > 0:
+        r = stack.pop()
+        if (
+            grid[r.x][r.y] in [ROBOT, BOX]
+            or grid[r.x][r.y] in [LEFT_BOX, RIGHT_BOX]
+            and d.x == 0
+        ):
+            group.add(r)
+            if r + d not in group:
+                stack.append(r + d)
+        elif grid[r.x][r.y] == LEFT_BOX and d.x != 0:
+            group.add(r)
+            if r + d not in group:
+                stack.append(r + d)
+            if r + Point(0, 1) not in group:
+                stack.append(r + Point(0, 1))
+        elif grid[r.x][r.y] == RIGHT_BOX and d.x != 0:
+            group.add(r)
+            if r + d not in group:
+                stack.append(r + d)
+            if r + Point(0, -1) not in group:
+                stack.append(r + Point(0, -1))
+    return group
 
 
 def do_move(d, grid):
@@ -44,15 +78,13 @@ def do_move(d, grid):
         for y in range(len(grid[0]))
         if grid[x][y] == ROBOT
     )
-    group = []
-    while within_bounds(r, grid) and grid[r.x][r.y] in [ROBOT, BOX]:
-        group.append(r)
-        r += d
-    if within_bounds(r, grid) and grid[r.x][r.y] == SPACE:
-        for p in group[::-1]:
-            grid[p.x + d.x][p.y + d.y] = grid[p.x][p.y]
-        if group:
+    group = find_push_group(r, d, grid)
+    pushed_group = {(p + d, grid[p.x][p.y]) for p in group}
+    if all(grid[p.x][p.y] != WALL for p, _ in pushed_group):
+        for p in group:
             grid[p.x][p.y] = SPACE
+        for p, v in pushed_group:
+            grid[p.x][p.y] = v
 
 
 def simulate_moves(grid, moves):
@@ -77,7 +109,13 @@ def part1(text):
 
 
 def part2(text):
-    pass
+    tests2()
+    grid, moves = text.split('\n\n')
+    grid = parse_grid(
+        grid.replace('#', '##').replace('O', '[]').replace('.', '..').replace('@', '@.')
+    )
+    simulate_moves(grid, moves.replace('\n', ''))
+    return gps_coords(grid)
 
 
 def tests1():
@@ -278,3 +316,27 @@ def tests1():
 ########'''
     )
     assert gps_coords(grid) == 2028
+
+
+def tests2():
+
+    grid = parse_grid(
+        '''##############
+##......##..##
+##..........##
+##....[][]@.##
+##....[]....##
+##..........##
+##############'''
+    )
+    simulate_moves(grid, '<')
+    assert (
+        grid_to_text(grid)
+        == '''##############
+##......##..##
+##..........##
+##...[][]@..##
+##....[]....##
+##..........##
+##############'''
+    )
