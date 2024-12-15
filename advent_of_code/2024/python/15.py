@@ -32,23 +32,16 @@ DIRECTIONS = {
 }
 
 
-def within_bounds(p, grid):
-    return 0 <= p.x < len(grid) and 0 <= p.y < len(grid[0])
-
-
 def gps_coords(grid):
-    total = 0
-    for x in range(len(grid)):
-        for y in range(len(grid[0])):
-            if grid[x][y] in [BOX, LEFT_BOX]:
-                total += 100 * x + y
-    return total
+    return sum(
+        100 * x + y
+        for x in range(len(grid))
+        for y in range(len(grid[0]))
+        if grid[x][y] in [BOX, LEFT_BOX]
+    )
 
 
 def find_push_group(r, d, grid):
-    if not within_bounds(r, grid):
-        return set()
-
     stack = [r]
     group = set()
     while len(stack) > 0:
@@ -90,7 +83,7 @@ def do_move(d, grid):
             grid[p.x][p.y] = v
 
 
-def simulate_moves(grid, moves):
+def simulate(grid, moves):
     for move in moves.replace('\n', ''):
         do_move(DIRECTIONS[move], grid)
 
@@ -103,7 +96,7 @@ def part1(text):
     tests1()
     grid, moves = text.split('\n\n')
     grid = parse_grid(grid)
-    simulate_moves(grid, moves.replace('\n', ''))
+    simulate(grid, moves.replace('\n', ''))
     return gps_coords(grid)
 
 
@@ -113,7 +106,7 @@ def part2(text):
     grid = parse_grid(
         grid.replace('#', '##').replace('O', '[]').replace('.', '..').replace('@', '@.')
     )
-    simulate_moves(grid, moves.replace('\n', ''))
+    simulate(grid, moves.replace('\n', ''))
     return gps_coords(grid)
 
 
@@ -138,7 +131,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, '<')
+    simulate(grid, '<')
     assert (
         grid_to_text(grid)
         == '''########
@@ -150,7 +143,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, '^')
+    simulate(grid, '^')
     assert (
         grid_to_text(grid)
         == '''########
@@ -162,7 +155,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, '^')
+    simulate(grid, '^')
     assert (
         grid_to_text(grid)
         == '''########
@@ -174,7 +167,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, '>')
+    simulate(grid, '>')
     assert (
         grid_to_text(grid)
         == '''########
@@ -186,7 +179,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, '>')
+    simulate(grid, '>')
     assert (
         grid_to_text(grid)
         == '''########
@@ -198,7 +191,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, '>')
+    simulate(grid, '>')
     assert (
         grid_to_text(grid)
         == '''########
@@ -210,7 +203,7 @@ def tests1():
 #......#
 ########'''
     )
-    simulate_moves(grid, 'v')
+    simulate(grid, 'v')
     assert (
         grid_to_text(grid)
         == '''########
@@ -222,7 +215,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, 'v')
+    simulate(grid, 'v')
     assert (
         grid_to_text(grid)
         == '''########
@@ -234,7 +227,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, '<')
+    simulate(grid, '<')
     assert (
         grid_to_text(grid)
         == '''########
@@ -246,7 +239,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, 'v')
+    simulate(grid, 'v')
     assert (
         grid_to_text(grid)
         == '''########
@@ -258,7 +251,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, '>')
+    simulate(grid, '>')
     assert (
         grid_to_text(grid)
         == '''########
@@ -270,7 +263,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, '>')
+    simulate(grid, '>')
     assert (
         grid_to_text(grid)
         == '''########
@@ -282,7 +275,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, 'v')
+    simulate(grid, 'v')
     assert (
         grid_to_text(grid)
         == '''########
@@ -294,7 +287,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, '<')
+    simulate(grid, '<')
     assert (
         grid_to_text(grid)
         == '''########
@@ -306,7 +299,7 @@ def tests1():
 #...O..#
 ########'''
     )
-    simulate_moves(grid, '<')
+    simulate(grid, '<')
     assert (
         grid_to_text(grid)
         == '''########
@@ -332,7 +325,7 @@ def tests2():
 ##..........##
 ##############'''
     )
-    simulate_moves(grid, '<')
+    simulate(grid, '<')
     assert (
         grid_to_text(grid)
         == '''##############
