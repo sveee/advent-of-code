@@ -19,11 +19,16 @@ ROBOT = '@'
 SPACE = '.'
 WALL = '#'
 
+LEFT = Point(0, -1)
+RIGHT = Point(0, 1)
+UP = Point(-1, 0)
+DOWN = Point(1, 0)
+
 DIRECTIONS = {
-    '<': Point(0, -1),
-    '>': Point(0, 1),
-    '^': Point(-1, 0),
-    'v': Point(1, 0),
+    '<': LEFT,
+    '>': RIGHT,
+    '^': UP,
+    'v': DOWN,
 }
 
 
@@ -47,27 +52,25 @@ def find_push_group(r, d, grid):
     stack = [r]
     group = set()
     while len(stack) > 0:
-        r = stack.pop()
+        p = stack.pop()
+        if grid[p.x][p.y] not in [WALL, SPACE]:
+            group.add(p)
         if (
-            grid[r.x][r.y] in [ROBOT, BOX]
-            or grid[r.x][r.y] in [LEFT_BOX, RIGHT_BOX]
+            grid[p.x][p.y] in [ROBOT, BOX]
+            or grid[p.x][p.y] in [LEFT_BOX, RIGHT_BOX]
             and d.x == 0
-        ):
-            group.add(r)
-            if r + d not in group:
-                stack.append(r + d)
-        elif grid[r.x][r.y] == LEFT_BOX and d.x != 0:
-            group.add(r)
-            if r + d not in group:
-                stack.append(r + d)
-            if r + Point(0, 1) not in group:
-                stack.append(r + Point(0, 1))
-        elif grid[r.x][r.y] == RIGHT_BOX and d.x != 0:
-            group.add(r)
-            if r + d not in group:
-                stack.append(r + d)
-            if r + Point(0, -1) not in group:
-                stack.append(r + Point(0, -1))
+        ) and p + d not in group:
+            stack.append(p + d)
+        elif grid[p.x][p.y] == LEFT_BOX and d.x != 0:
+            if p + d not in group:
+                stack.append(p + d)
+            if p + RIGHT not in group:
+                stack.append(p + RIGHT)
+        elif grid[p.x][p.y] == RIGHT_BOX and d.x != 0:
+            if p + d not in group:
+                stack.append(p + d)
+            if p + LEFT not in group:
+                stack.append(p + LEFT)
     return group
 
 
@@ -96,10 +99,6 @@ def parse_grid(text):
     return list(map(list, text.splitlines()))
 
 
-def grid_to_text(grid):
-    return '\n'.join(''.join(line) for line in grid)
-
-
 def part1(text):
     tests1()
     grid, moves = text.split('\n\n')
@@ -116,6 +115,10 @@ def part2(text):
     )
     simulate_moves(grid, moves.replace('\n', ''))
     return gps_coords(grid)
+
+
+def grid_to_text(grid):
+    return '\n'.join(''.join(line) for line in grid)
 
 
 def tests1():
