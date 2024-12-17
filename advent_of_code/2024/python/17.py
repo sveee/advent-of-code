@@ -92,18 +92,18 @@ def run_more_simplified_program(A):
     return output
 
 
-def step(A):
+def program_step(A):
     return (((A % 8) ^ 3) ^ (A >> ((A % 8) ^ 5))) % 8
 
 
-def decode_program(A, output):
+def decode_input(A, output):
     if len(output) == 0:
         return [A]
 
     ans = []
     for suffix in range(8):
-        if step((A << 3) + suffix) == output[-1]:
-            ans.extend(decode_program((A << 3) + suffix, output[:-1]))
+        if program_step((A << 3) + suffix) == output[-1]:
+            ans.extend(decode_input((A << 3) + suffix, output[:-1]))
     return ans
 
 
@@ -117,4 +117,4 @@ def part1(text):
 def part2(text):
     _left, right = text.split('\n\n')
     program = list(map(int, right.split()[1].split(',')))
-    return min(decode_program(0, program))
+    return min(decode_input(0, program))
