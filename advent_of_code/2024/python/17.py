@@ -66,7 +66,7 @@ def run_program(program, registers):
 # 0,3,     A = A // 2 ** 3
 # 4,3,     B = B ^ C
 # 5,5,     output.append(B % 8)
-# 3,0      go to 0
+# 3,0      repeat until A == 0
 
 
 def run_simplified_program(A):
