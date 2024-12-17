@@ -101,9 +101,9 @@ def decode_program(A, output):
         return [A]
 
     ans = []
-    for prefix in range(8):
-        if step((A << 3) + prefix) == output[-1]:
-            ans.extend(decode_program((A << 3) + prefix, output[:-1]))
+    for suffix in range(8):
+        if step((A << 3) + suffix) == output[-1]:
+            ans.extend(decode_program((A << 3) + suffix, output[:-1]))
     return ans
 
 
