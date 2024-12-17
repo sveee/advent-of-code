@@ -59,6 +59,54 @@ def run_program(program, registers):
     return ','.join(map(str, output))
 
 
+# 2,4,     B = A % 8
+# 1,5,     B = B ^ 5
+# 7,5,     C = A // 2 ** B
+# 1,6,     B = B ^ 6
+# 0,3,     A = A // 2 ** 3
+# 4,3,     B = B ^ C
+# 5,5,     output.append(B % 8)
+# 3,0      go to 0
+
+
+def run_simplified_program(A):
+    B, C = 0, 0
+    output = []
+    while A != 0:
+        B = A % 8
+        B = B ^ 5
+        C = A // 2**B
+        B = B ^ 6
+        A = A // 2**3
+        B = B ^ C
+        output.append(B % 8)
+    return output
+
+
+def run_more_simplified_program(A):
+    output = []
+    while A != 0:
+        B = ((A % 8) ^ 3) ^ (A >> ((A % 8) ^ 5))
+        A = A >> 3
+        output.append(B % 8)
+    return output
+
+
+def step(A):
+    return (((A % 8) ^ 3) ^ (A >> ((A % 8) ^ 5))) % 8
+
+
+def decode_program(A, program):
+    if len(program) == 0:
+        return [A]
+
+    ans = []
+    for prefix in range(8):
+        if step((A << 3) + prefix) == program[-1]:
+            ans.extend(decode_program((A << 3) + prefix, program[:-1]))
+    return ans
+
+
 def part1(text):
     left, right = text.split('\n\n')
     registers = Registers(*map(int, re.findall('\d+', left)))
@@ -67,4 +115,6 @@ def part1(text):
 
 
 def part2(text):
-    pass
+    _left, right = text.split('\n\n')
+    program = list(map(int, right.split()[1].split(',')))
+    return min(decode_program(0, program))
