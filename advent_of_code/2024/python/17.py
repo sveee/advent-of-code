@@ -96,14 +96,14 @@ def step(A):
     return (((A % 8) ^ 3) ^ (A >> ((A % 8) ^ 5))) % 8
 
 
-def decode_program(A, program):
-    if len(program) == 0:
+def decode_program(A, output):
+    if len(output) == 0:
         return [A]
 
     ans = []
     for prefix in range(8):
-        if step((A << 3) + prefix) == program[-1]:
-            ans.extend(decode_program((A << 3) + prefix, program[:-1]))
+        if step((A << 3) + prefix) == output[-1]:
+            ans.extend(decode_program((A << 3) + prefix, output[:-1]))
     return ans
 
 
