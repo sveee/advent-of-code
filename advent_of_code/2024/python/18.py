@@ -8,9 +8,7 @@ directions = [
 ]
 
 
-def part1(text, n=71, first=1024):
-    bytes = [tuple(map(int, line.split(','))) for line in text.splitlines()]
-    first_bytes = set(bytes[:first])
+def bfs(first_bytes, n):
     s, e = (0, 0), (n - 1, n - 1)
     queue = deque([s])
     distance = {s: 0}
@@ -28,9 +26,22 @@ def part1(text, n=71, first=1024):
             ):
                 distance[(nx, ny)] = distance[(x, y)] + 1
                 queue.append((nx, ny))
+    return distance.get(e)
 
-    return distance[e]
+
+def part1(text, n=71, first=1024):
+    bytes = [tuple(map(int, line.split(','))) for line in text.splitlines()]
+    first_bytes = set(bytes[:first])
+    return bfs(first_bytes, n)
 
 
-def part2(text):
-    pass
+def part2(text, n=71):
+    bytes = [tuple(map(int, line.split(','))) for line in text.splitlines()]
+    left, right = 0, len(bytes)
+    while right - left > 1:
+        mid = (left + right) // 2
+        if bfs(bytes[:mid], n) is not None:
+            left = mid
+        else:
+            right = mid
+    return ','.join(map(str, bytes[left]))
