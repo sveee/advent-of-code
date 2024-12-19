@@ -21,15 +21,22 @@ fn n_ways(design: &str, towels: &HashSet<String>, cache: &mut HashMap<String, i6
     ans
 }
 
-fn part1(text: &str) -> i64 {
+fn parse_input(text: &str) -> (HashSet<String>, Vec<&str>) {
     let parts: Vec<&str> = text.split("\n\n").collect();
     let (left, right) = (parts[0], parts[1]);
 
     let towels: HashSet<String> = left.split(", ").map(|s| s.to_string()).collect();
+    let designs: Vec<&str> = right.lines().collect();
+
+    (towels, designs)
+}
+
+fn part1(text: &str) -> i64 {
+    let (towels, designs) = parse_input(text);
     let mut cache = HashMap::new();
 
-    right
-        .lines()
+    designs
+        .iter()
         .map(|design| {
             let ways = n_ways(design, &towels, &mut cache);
             if ways > 0 {
@@ -42,14 +49,11 @@ fn part1(text: &str) -> i64 {
 }
 
 fn part2(text: &str) -> i64 {
-    let parts: Vec<&str> = text.split("\n\n").collect();
-    let (left, right) = (parts[0], parts[1]);
-
-    let towels: HashSet<String> = left.split(", ").map(|s| s.to_string()).collect();
+    let (towels, designs) = parse_input(text);
     let mut cache = HashMap::new();
 
-    right
-        .lines()
+    designs
+        .iter()
         .map(|design| n_ways(design, &towels, &mut cache))
         .sum()
 }
