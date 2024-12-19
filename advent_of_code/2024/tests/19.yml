@@ -1,0 +1,26 @@
+part1:
+- input: |-
+    r, wr, b, g, bwu, rb, gb, br
+
+    brwrr
+    bggr
+    gbbr
+    rrbgbr
+    ubwu
+    bwurrg
+    brgr
+    bbrgwb
+  answer: '6'
+part2:
+- input: |-
+    r, wr, b, g, bwu, rb, gb, br
+
+    brwrr
+    bggr
+    gbbr
+    rrbgbr
+    ubwu
+    bwurrg
+    brgr
+    bbrgwb
+  answer: '16'
