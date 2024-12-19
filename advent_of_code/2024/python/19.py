@@ -6,7 +6,7 @@ def n_ways(design, towels, cache):
         return cache[design]
 
     ans = 0
-    for i in range(min(8, len(design)), 0, -1):
+    for i in range(1, len(design) + 1):
         if design[:i] in towels:
             ans += n_ways(design[i:], towels, cache)
     cache[design] = ans
