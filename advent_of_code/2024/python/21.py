@@ -81,7 +81,6 @@ def tests1():
     assert shortest_paths('8', '0', 0) == ['vvv']
     assert shortest_paths('2', '4', 0) == ['<^', '^<']
 
-    # assert '<vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A' in type_in('029A', 0)
     assert shortest_length('029A', 0, 3, {}) == 68
     assert shortest_length('980A', 0, 3, {}) == 60
     assert shortest_length('179A', 0, 3, {}) == 68
