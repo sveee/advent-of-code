@@ -9,3 +9,7 @@ part1:
     456A
     379A
   answer: 126384
+part2:
+- input: |-
+    029A
+  answer: 2379451789590
