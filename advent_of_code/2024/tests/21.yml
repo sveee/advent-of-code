@@ -1,0 +1,11 @@
+part1:
+- input: |-
+    029A
+  answer: 1972
+- input: |-
+    029A
+    980A
+    179A
+    456A
+    379A
+  answer: 126384
