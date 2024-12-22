@@ -1,0 +1,27 @@
+part1:
+- input: '123'
+  k: 0
+  answer: '123'
+- input: '123'
+  k: 1
+  answer: 15887950
+- input: '123'
+  k: 2
+  answer: 16495136
+- input: '123'
+  k: 3
+  answer: 527345
+- input: '123'
+  k: 4
+  answer: 704524
+- input: '123'
+  k: 5
+  answer: 1553684
+- input: '1'
+  answer: 8685429
+- input: '10'
+  answer: 4700978
+- input: '100'
+  answer: 15273692
+- input: '2024'
+  answer: 8667524
