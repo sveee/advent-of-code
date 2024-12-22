@@ -11,7 +11,7 @@ from typing import Any
 
 import click
 import yaml
-from advent_of_code.api import get_problem_soup, submit_solution
+from advent_of_code.api import AOCApi
 from bs4 import BeautifulSoup
 
 
@@ -84,6 +84,7 @@ class ProblemSolver:
     def __init__(self, runner: Runner) -> None:
         self.runner = runner
         self.test_data = self.read_test_data()
+        self.aoc_api = AOCApi(os.environ['AOC_SESSION'])
 
     def read_test_data(self) -> dict[str, Any]:
         test_folder = os.path.join(
@@ -127,7 +128,7 @@ class ProblemSolver:
         return True
 
     def fetch_existing_answers(self) -> dict[Part, str]:
-        soup = get_problem_soup(self.runner.year, self.runner.day)
+        soup = self.aoc_api.get_problem_soup(self.runner.year, self.runner.day)
         answer_ps = soup.find_all('p')
         answers = [
             p.find('code').text
@@ -162,7 +163,7 @@ class ProblemSolver:
             )
 
     def submit_and_display_response(self, answer: str, level: int) -> None:
-        response = submit_solution(
+        response = self.aoc_api.submit_solution(
             answer=answer,
             level=level,
             year=self.runner.year,

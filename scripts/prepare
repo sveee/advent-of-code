@@ -7,7 +7,7 @@ from pathlib import Path
 
 import click
 import yaml
-from advent_of_code.api import get_problem_input_data, get_problem_soup
+from advent_of_code.api import AOCApi
 
 
 @dataclass(frozen=True)
@@ -33,7 +33,7 @@ def configure_yaml_multiline_dump() -> None:
 
 def get_tests(year: int, day: int) -> list[TestCase]:
     """Fetches test cases for the given year and day."""
-    soup = get_problem_soup(year, day)
+    soup = AOCApi(os.environ['AOC_SESSION']).get_problem_soup(year, day)
     test_cases = []
     for part in soup.find_all('article'):
         pres = part.find_all('pre') or soup.find_all('pre')
@@ -96,7 +96,7 @@ def download_input_data(year: int, day: int) -> None:
     )
     if not input_data_file_path.exists():
         input_data_file_path.parent.mkdir(parents=True, exist_ok=True)
-        input_data = get_problem_input_data(year, day)
+        input_data = AOCApi(os.environ['AOC_SESSION']).get_problem_input_data(year, day)
         input_data_file_path.write_text(
             input_data
         )
