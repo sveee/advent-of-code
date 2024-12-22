@@ -32,7 +32,7 @@ def get_changes_to_banana(seq):
     changes_to_banana = {}
     for i in range(n - 4):
         digits = seq[i : i + 5]
-        changes = tuple([int(d2) - int(d1) for d1, d2 in zip(digits, digits[1:])])
+        changes = tuple(d2 - d1 for d1, d2 in zip(digits, digits[1:]))
         if changes not in changes_to_banana:
             changes_to_banana[changes] = digits[-1]
     return changes_to_banana

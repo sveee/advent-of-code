@@ -27,8 +27,8 @@ part1:
   answer: 8667524
 part2:
 - input: |-
-    2
     1
+    2
     3
     2024
   answer: 23
