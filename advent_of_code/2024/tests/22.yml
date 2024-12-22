@@ -25,3 +25,10 @@ part1:
   answer: 15273692
 - input: '2024'
   answer: 8667524
+part2:
+- input: |-
+    2
+    1
+    3
+    2024
+  answer: 23
