@@ -97,9 +97,7 @@ def download_input_data(year: int, day: int) -> None:
     if not input_data_file_path.exists():
         input_data_file_path.parent.mkdir(parents=True, exist_ok=True)
         input_data = AOCApi(os.environ['AOC_SESSION']).get_problem_input_data(year, day)
-        input_data_file_path.write_text(
-            input_data
-        )
+        input_data_file_path.write_text(input_data)
         open_file(input_data_file_path)
 
 

@@ -106,9 +106,7 @@ class ProblemSolver:
             else f'❌ {generated} != {expected}'
         )
 
-    def test_pass(
-        self, test_index: int, part: Part, test_case: dict[str, Any]
-    ) -> bool:
+    def test_pass(self, test_index: int, part: Part, test_case: dict[str, Any]) -> bool:
         input_data = test_case.pop('input')
         expected_output = str(test_case.pop('answer'))
         parameters = test_case
@@ -135,18 +133,19 @@ class ProblemSolver:
             for p in answer_ps
             if p.text.startswith('Your puzzle answer was')
         ]
-        return {
-            part: answer
-            for part, answer in zip([Part.PART1, Part.PART2], answers)
-        }
-    
+        return {part: answer for part, answer in zip([Part.PART1, Part.PART2], answers)}
+
     def get_problem_input(self) -> str:
-        self.input_data_path = os.path.join(os.path.dirname(__file__), f'../advent_of_code/{self.runner.year}/input/{self.runner.day:02d}.txt')
-        assert os.path.exists(self.input_data_path), f'{self.input_data_path} does not exist'
+        self.input_data_path = os.path.join(
+            os.path.dirname(__file__),
+            f'../advent_of_code/{self.runner.year}/input/{self.runner.day:02d}.txt',
+        )
+        assert os.path.exists(
+            self.input_data_path
+        ), f'{self.input_data_path} does not exist'
         with open(self.input_data_path) as f:
             input_data = f.read()
         return input_data
-
 
     def display_solutions(self, answers: dict[Part, str]) -> None:
         print('Problem already solved!')
