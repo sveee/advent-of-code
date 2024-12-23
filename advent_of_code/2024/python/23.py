@@ -1,16 +1,19 @@
 from collections import defaultdict
 
 
-def part1(text):
+def read_graph(text):
     graph = defaultdict(set)
     for line in text.splitlines():
         left, right = line.split('-')
         graph[left].add(right)
         graph[right].add(left)
+    return graph
 
-    nodes = sorted(graph)
+
+def part1(text):
+    graph = read_graph(text)
     cliques_3 = set()
-    for node_a in nodes:
+    for node_a in graph:
         if not node_a.startswith('t'):
             continue
 
@@ -37,11 +40,6 @@ def find_max_clique(node, graph):
 
 
 def part2(text):
-    graph = defaultdict(set)
-    for line in text.splitlines():
-        left, right = line.split('-')
-        graph[left].add(right)
-        graph[right].add(left)
-
+    graph = read_graph(text)
     max_clique = max([find_max_clique(node, graph) for node in sorted(graph)], key=len)
     return ','.join(sorted(max_clique))
