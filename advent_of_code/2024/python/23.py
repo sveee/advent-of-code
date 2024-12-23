@@ -2,12 +2,11 @@ from collections import defaultdict
 
 
 def part1(text):
-    graph = defaultdict(list)
-
+    graph = defaultdict(set)
     for line in text.splitlines():
         left, right = line.split('-')
-        graph[left].append(right)
-        graph[right].append(left)
+        graph[left].add(right)
+        graph[right].add(left)
 
     nodes = sorted(graph)
     cliques_3 = set()
@@ -22,5 +21,27 @@ def part1(text):
     return len(cliques_3)
 
 
+def find_max_clique(node, graph):
+    clique = {node}
+    prev = node
+    while True:
+        found = False
+        for next in graph[prev]:
+            if next not in clique and clique <= graph[next]:
+                clique.add(next)
+                prev = next
+                found = True
+        if not found:
+            break
+    return clique
+
+
 def part2(text):
-    pass
+    graph = defaultdict(set)
+    for line in text.splitlines():
+        left, right = line.split('-')
+        graph[left].add(right)
+        graph[right].add(left)
+
+    max_clique = max([find_max_clique(node, graph) for node in sorted(graph)], key=len)
+    return ','.join(sorted(max_clique))
