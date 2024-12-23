@@ -29,7 +29,7 @@ def find_max_clique(node, graph):
     prev = node
     while True:
         found = False
-        for next in graph[prev]:
+        for next in sorted(graph[prev]):
             if next not in clique and clique <= graph[next]:
                 clique.add(next)
                 prev = next
