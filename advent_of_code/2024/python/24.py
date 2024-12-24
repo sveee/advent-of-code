@@ -95,6 +95,11 @@ def get_first_n_gates(n, gates):
     return subset_gates - {gate_by_output[f'z{n:02d}']}
 
 
+def is_valid_z(index, expected, values):
+    z_name = f'z{index:02d}'
+    return z_name in values and values[z_name] == expected
+
+
 def passes_test1(n, gates):
     input_values = {}
     for index in range(n):
@@ -103,8 +108,7 @@ def passes_test1(n, gates):
     input_values[f'x{n:02d}'] = input_values[f'y{n:02d}'] = 0
     output_values = run_operations(input_values, gates)
     for index in range(n):
-        z_name = f'z{index:02d}'
-        if z_name not in output_values or output_values[z_name] != 1:
+        if not is_valid_z(index, 1, output_values):
             return False
     return True
 
@@ -118,8 +122,7 @@ def passes_test2(n, gates):
     input_values[f'x{n:02d}'] = input_values[f'y{n:02d}'] = 0
     output_values = run_operations(input_values, gates)
     for index in range(n):
-        z_name = f'z{index:02d}'
-        if z_name not in output_values or output_values[z_name] != 0:
+        if not is_valid_z(index, 0, output_values):
             return False
     return True
 
@@ -131,11 +134,10 @@ def passes_test3(n, gates):
         input_values[f'y{index:02d}'] = 1
     input_values[f'x{n:02d}'] = input_values[f'y{n:02d}'] = 0
     output_values = run_operations(input_values, gates)
-    if 'z00' not in output_values or output_values['z00'] != 0:
-        return False
+    if not is_valid_z(0, 0, output_values):
+        return
     for index in range(1, n):
-        z_name = f'z{index:02d}'
-        if z_name not in output_values or output_values[z_name] != 1:
+        if not is_valid_z(index, 1, output_values):
             return False
     return True
 
