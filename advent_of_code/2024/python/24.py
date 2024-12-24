@@ -92,7 +92,7 @@ def get_first_n_gates(n, gates):
         ):
             stack.append(gate_by_output[gate.right])
             subset_gates.add(gate_by_output[gate.right])
-    return subset_gates - {gate_by_output[f'z{n:02d}']}
+    return subset_gates
 
 
 def is_valid_z(index, expected, values):
