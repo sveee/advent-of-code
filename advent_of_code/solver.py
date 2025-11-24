@@ -52,7 +52,7 @@ class ProblemSolver:
         self.test_data = self.read_test_data()
         self.aoc_api = AOCApi(session_id)
         self.input_data_path = Path(
-            '{os.path.dirname(__file__)}/../advent_of_code/'
+            f'{os.path.dirname(__file__)}/../advent_of_code/'
             f'{self.year}/input/{self.day:02d}.txt'
         )
 
