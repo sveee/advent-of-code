@@ -9,3 +9,4 @@ class Part(Enum):
 class Language(Enum):
     PYTHON = 'python'
     RUST = 'rust'
+    CPP = 'cpp'

@@ -1,0 +1,27 @@
+# 1. Base Style (Sets sensible defaults)
+BasedOnStyle: Google
+
+# 2. Indentation (The #1 source of style conflict)
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# 3. Brace Style (Highly visible style choice)
+BreakBeforeBraces: Attach
+
+# 4. Line Length and Layout
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: Empty
+
+# 5. Pointer Alignment (Ensures consistency for '*' and '&')
+PointerAlignment: Left
+
+# 6. Includes and Headers (Crucial for large, clean header files)
+SortIncludes: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: "^<.*>$" # System headers first
+    Priority: 1
+    SortPriority: 0
+  - Regex: ".*"     # Project headers second
+    Priority: 2

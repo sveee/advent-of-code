@@ -1,3 +1,6 @@
+import os
+import subprocess
+import tempfile
 from abc import ABC, abstractmethod
 from importlib import import_module
 from typing import Any
@@ -51,7 +54,35 @@ class RustRunner(Runner):
             return ''
 
 
+class CPPRunner(Runner):
+    def __init__(self, year: int, day: int) -> None:
+        super().__init__(year, day)
+        self.binary_path = os.path.join(
+            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
+            f'{year}/cpp/bin/{day:02d}',
+        )
+        assert os.path.exists(self.binary_path), f'{self.binary_path} does not exist'
+
+    def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
+        try:
+            with tempfile.NamedTemporaryFile(mode='w+', delete=True) as tmp_file:
+                tmp_file.write(input_data)
+                tmp_file.flush()
+                result = subprocess.run(
+                    [self.binary_path, part.value, tmp_file.name],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            print(f'Error running C++ binary: {e}')
+            print(f'stderr: {e.stderr}')
+            return ''
+
+
 language_runner_map = {
     Language.PYTHON: PythonRunner,
     Language.RUST: RustRunner,
+    Language.CPP: CPPRunner,
 }
