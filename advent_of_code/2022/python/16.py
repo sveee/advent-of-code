@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from itertools import chain, combinations
 from typing import Set
 
-from advent_of_code.api import get_input
 from tqdm.auto import tqdm
+
+from advent_of_code.api import get_input
 
 text = get_input(day=16, year=2022)
 

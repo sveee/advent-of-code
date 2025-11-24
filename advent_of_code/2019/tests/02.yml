@@ -14,3 +14,4 @@ part1:
 - input: 1,1,1,4,99,5,6,0,99
   answer: '30'
   test: true
+part2: null
