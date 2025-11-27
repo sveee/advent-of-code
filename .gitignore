@@ -11,4 +11,4 @@ input
 target
 Cargo.lock
 
-cpp/bin/
+**/cpp/bin/
