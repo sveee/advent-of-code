@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <ranges>
 #include <string>
 #include <vector>
 
@@ -9,10 +8,7 @@
 using namespace std;
 
 const string part1(const string &input) {
-    vector<string> lines =
-        input | views::split('\n') |
-        views::transform([](auto &&rng) { return string(rng.begin(), rng.end()); }) |
-        ranges::to<vector<string>>();
+    vector<string> lines = get_lines(input);
     int dial = 50;
     int password = 0;
     for (auto &line : lines) {
@@ -27,10 +23,7 @@ const string part1(const string &input) {
 }
 
 const string part2(const string &input) {
-    vector<string> lines =
-        input | views::split('\n') |
-        views::transform([](auto &&rng) { return string(rng.begin(), rng.end()); }) |
-        ranges::to<vector<string>>();
+    vector<string> lines = get_lines(input);
     int dial = 50;
     int password = 0;
     for (auto &line : lines) {
