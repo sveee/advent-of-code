@@ -36,6 +36,10 @@ const string part2(const string &input) {
     for (auto &line : lines) {
         int direction = (line[0] == 'L') ? -1 : 1;
         int value = stoi(line.substr(1));
+        // optimize bf
+        password += value / 100;
+        value = value % 100;
+        //
         for (int k = 0; k < value; ++k) {
             dial += direction;
             if (dial >= 100) {
