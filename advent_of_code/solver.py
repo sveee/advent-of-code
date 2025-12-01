@@ -1,11 +1,7 @@
 import os
 import re
 import subprocess
-import tempfile
-from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
-from datetime import datetime
-from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -64,6 +60,8 @@ class ProblemSolver:
         )
         os.makedirs(test_folder, exist_ok=True)
         test_config_path = os.path.join(test_folder, f'{self.day:02d}.yml')
+        if not os.path.exists(test_config_path):
+            return {}
         with open(test_config_path, 'r') as file:
             test_data = yaml.safe_load(file)
         return test_data
@@ -154,7 +152,7 @@ class ProblemSolver:
                 python_file_path.write_text(
                     '\ndef part1(text):\n    pass\n\ndef part2(text):\n    pass\n'
                 )
-                open_file(str(python_file_path))
+                _open_file(str(python_file_path))
 
     def _get_tests(self) -> list[_TestCase]:
         """Fetches test cases for the given year and day."""
@@ -198,7 +196,8 @@ class ProblemSolver:
             test_config_path.parent.mkdir(parents=True, exist_ok=True)
             with open(test_config_path, 'w') as f:
                 yaml.dump(test_data, f, sort_keys=False)
-            _open_file(test_config_path)
+            if len(test_data) < 2:
+                _open_file(test_config_path)
 
     def solve(self) -> None:
         problem_input = self.get_problem_input()

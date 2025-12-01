@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 from datetime import datetime
 
 import click
@@ -14,6 +15,7 @@ from advent_of_code.solver import ProblemSolver
 @click.option('--session_id', '-s', help='AOC session ID')
 def main(year: int, day: int, language: str, session_id: str | None) -> None:
     session_id = session_id or os.environ.get('AOC_SESSION')
+    assert session_id is not None, 'AOC session ID must be provided'
     solver = ProblemSolver(Language(language), year, day, session_id)
     solver.solve()
 
