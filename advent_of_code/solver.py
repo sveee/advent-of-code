@@ -45,26 +45,12 @@ class ProblemSolver:
         self.language = language
         self.year = year
         self.day = day
-        self.test_data = self.read_test_data()
+        self.test_data = {}
         self.aoc_api = AOCApi(session_id)
         self.input_data_path = Path(
             f'{os.path.dirname(__file__)}/../advent_of_code/'
             f'{self.year}/input/{self.day:02d}.txt'
         )
-
-    def read_test_data(self) -> dict[str, Any]:
-        test_folder = os.path.join(
-            os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
-            str(self.year),
-            'tests',
-        )
-        os.makedirs(test_folder, exist_ok=True)
-        test_config_path = os.path.join(test_folder, f'{self.day:02d}.yml')
-        if not os.path.exists(test_config_path):
-            return {}
-        with open(test_config_path, 'r') as file:
-            test_data = yaml.safe_load(file)
-        return test_data
 
     @staticmethod
     def _equal_status(generated: Any, expected: Any) -> str:
@@ -176,9 +162,12 @@ class ProblemSolver:
         test_config_path = Path(
             f'{os.path.dirname(__file__)}/../advent_of_code/{self.year}/tests/{self.day:02d}.yml'
         )
-        test_data = {}
+        os.makedirs(test_config_path.parent, exist_ok=True)
         # Load existing test data if the file exists
+        test_case = {}
+        first_time = True
         if test_config_path.exists():
+            first_time = False
             with open(test_config_path) as f:
                 test_data = yaml.safe_load(f) or {}
 
@@ -196,8 +185,9 @@ class ProblemSolver:
             test_config_path.parent.mkdir(parents=True, exist_ok=True)
             with open(test_config_path, 'w') as f:
                 yaml.dump(test_data, f, sort_keys=False)
-            if len(test_data) < 2:
+            if first_time:
                 _open_file(test_config_path)
+        self.test_data = test_data
 
     def solve(self) -> None:
         problem_input = self.get_problem_input()

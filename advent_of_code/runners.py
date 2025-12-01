@@ -61,10 +61,11 @@ class CPPRunner(Runner):
             os.path.join(os.path.dirname(__file__), '..', 'advent_of_code'),
             f'{year}/cpp/bin/{day:02d}',
         )
-        assert os.path.exists(self.binary_path), f'{self.binary_path} does not exist'
 
     def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
         try:
+            if not os.path.exists(self.binary_path):
+                return ''
             with tempfile.NamedTemporaryFile(mode='w+', delete=True) as tmp_file:
                 tmp_file.write(input_data)
                 tmp_file.flush()
