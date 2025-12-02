@@ -20,10 +20,10 @@ class Runner(ABC):
 class PythonRunner(Runner):
     def __init__(self, year: int, day: int) -> None:
         super().__init__(year, day)
-        self.module = import_module(f'advent_of_code.{year}.python.{day:02d}')
 
     def run(self, part: Part, input_data: str, **kwargs: Any) -> str:
-        part_func = getattr(self.module, part.value, None)
+        module = import_module(f'advent_of_code.{self.year}.python.{self.day:02d}')
+        part_func = getattr(module, part.value, None)
         return str(part_func(input_data, **kwargs))
 
 

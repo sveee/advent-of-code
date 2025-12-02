@@ -164,7 +164,7 @@ class ProblemSolver:
         )
         os.makedirs(test_config_path.parent, exist_ok=True)
         # Load existing test data if the file exists
-        test_case = {}
+        test_data = {}
         first_time = True
         if test_config_path.exists():
             first_time = False
