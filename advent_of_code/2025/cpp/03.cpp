@@ -9,39 +9,6 @@
 
 using namespace std;
 
-int largest_joltage(const string &line) {
-    int n = line.size();
-    int max_joltage = 0;
-    for (int i = 0; i < n; ++i) {
-        for (int j = i + 1; j < n; ++j) {
-            int joltage = (line[i] - '0') * 10 + (line[j] - '0');
-            if (joltage > max_joltage) {
-                max_joltage = joltage;
-            }
-        }
-    }
-    return max_joltage;
-}
-
-const string part1(const string &input) {
-    vector<string> lines = get_lines(input);
-    int total = 0;
-    for (const string &line : lines) {
-        total += largest_joltage(line);
-    }
-    return to_string(total);
-}
-
-long long largest_joltage_rec(int index, int remaining, const string &line) {
-    if (remaining == line.size() - index) {
-        return stoll(line.substr(index));
-    }
-    long long joltage1 =
-        largest_joltage_rec(index + 1, remaining - 1, line) * 10 + line[index] - '0';
-    long long joltage2 = largest_joltage_rec(index + 1, remaining, line);
-    return max(joltage1, joltage2);
-}
-
 long long dp[100][100][13];
 
 long long f(int start, int end, int k, const string &bank) {
@@ -72,6 +39,16 @@ void reset_memory() {
             }
         }
     }
+}
+
+const string part1(const string &input) {
+    vector<string> lines = get_lines(input);
+    int total = 0;
+    for (const string &line : lines) {
+        reset_memory();
+        total += f(0, line.size(), 2, line);
+    }
+    return to_string(total);
 }
 
 const string part2(const string &input) {
