@@ -13,7 +13,7 @@ const std::string read_file(const std::string &filename) {
     return buffer.str();
 }
 
-const std::vector<std::string> get_lines(const std::string &input_data) {
+const std::vector<std::string> split_lines(const std::string &input_data) {
     return input_data | std::views::split('\n') |
            std::views::transform([](auto &&rng) { return std::string(rng.begin(), rng.end()); }) |
            std::ranges::to<std::vector<std::string>>();

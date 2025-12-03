@@ -42,7 +42,7 @@ void reset_memory() {
 }
 
 const string part1(const string &input) {
-    vector<string> lines = get_lines(input);
+    vector<string> lines = split_lines(input);
     int total = 0;
     for (const string &line : lines) {
         reset_memory();
@@ -52,7 +52,7 @@ const string part1(const string &input) {
 }
 
 const string part2(const string &input) {
-    vector<string> lines = get_lines(input);
+    vector<string> lines = split_lines(input);
     long long total = 0;
     for (const string &line : lines) {
         reset_memory();
