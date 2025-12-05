@@ -56,14 +56,8 @@ long long invalid_ids_sum_any(long long start, long long end) {
     return sum;
 }
 
-vector<string> get_intervals(const string &input_data) {
-    return input_data | std::views::split(',') |
-           std::views::transform([](auto &&rng) { return std::string(rng.begin(), rng.end()); }) |
-           std::ranges::to<std::vector<std::string>>();
-}
-
 const string part1(const string &input) {
-    vector<string> intervals = get_intervals(input);
+    vector<string> intervals = split_string(input, ",");
     long long start, end;
     char dash;
     long long total_sum = 0;
@@ -76,7 +70,7 @@ const string part1(const string &input) {
 }
 
 const string part2(const string &input) {
-    vector<string> intervals = get_intervals(input);
+    vector<string> intervals = split_string(input, ",");
     long long start, end;
     char dash;
     long long total_sum = 0;

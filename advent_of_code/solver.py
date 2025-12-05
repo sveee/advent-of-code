@@ -206,4 +206,5 @@ class ProblemSolver:
                 problem_input,
             )
             level = len(answers) + 1
+            print(f'Submitting answer for part {level}: {answer_to_submit}')
             self.submit_and_display_response(answer=answer_to_submit, level=level)

@@ -8,7 +8,7 @@
 using namespace std;
 
 const string part1(const string &input) {
-    vector<string> lines = split_lines(input);
+    vector<string> lines = split_string(input);
     int dial = 50;
     int password = 0;
     for (auto &line : lines) {
@@ -23,7 +23,7 @@ const string part1(const string &input) {
 }
 
 const string part2(const string &input) {
-    vector<string> lines = split_lines(input);
+    vector<string> lines = split_string(input);
     int dial = 50;
     int password = 0;
     for (auto &line : lines) {

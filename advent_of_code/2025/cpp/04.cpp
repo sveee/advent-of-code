@@ -14,7 +14,7 @@ int dx[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 int dy[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 const string part1(const string &input) {
-    vector<string> lines = split_lines(input);
+    vector<string> lines = split_string(input);
     int n = lines.size();
     int m = lines[0].size();
     int total = 0;
