@@ -1,28 +1,19 @@
 
 #include <iostream>
+#include <set>
 #include <string>
 #include <vector>
-#include <unordered_set>
-#include <set>
 
 #include "utils.h"
 
 using namespace std;
 
+#define N 150
+#define EMPTY -1LL
 
-// struct pair_hash {
-//     size_t operator () (const pair<int, int> &p) const {
-//         size_t h1 = hash<int>{}(p.first);
-//         size_t h2 = hash<int>{}(p.second);
-//         return h1 ^ (h2 << 1); 
-//     }
-// };
-
+long long mem[N][N];
 
 void df(int x, int y, vector<string> &grid, set<pair<int, int>> &visited) {
-    
-    // cout << x << "," << y << "\n";
-
     if (visited.contains({x, y})) {
         return;
     }
@@ -35,7 +26,7 @@ void df(int x, int y, vector<string> &grid, set<pair<int, int>> &visited) {
         if (y < grid.size() - 1) {
             df(x, y + 1, grid, visited);
         }
-    } else if(x < grid[0].size() - 1) {
+    } else if (x < grid[0].size() - 1) {
         df(x + 1, y, grid, visited);
     }
 }
@@ -44,10 +35,9 @@ const string part1(const string &input) {
     vector<string> grid = split_string(input);
     set<pair<int, int>> visited;
 
-    int x = 0;
-    int y = grid[0].find('S');
+    int sy = grid[0].find('S');
 
-    df(x, y, grid, visited);
+    df(0, sy, grid, visited);
 
     int total = 0;
     for (auto [vx, vy] : visited) {
@@ -58,10 +48,44 @@ const string part1(const string &input) {
     return to_string(total);
 }
 
-const string part2(const string &input) {
-    vector<string> lines = split_string(input);
+long long dp(int x, int y, vector<string> &grid) {
+    if (x == grid.size() - 1) {
+        return 1LL;
+    }
 
-    return "";
+    if (mem[x][y] != EMPTY) {
+        return mem[x][y];
+    }
+
+    long long total = 0LL;
+    if (grid[x][y] == '^') {
+        if (y > 0) {
+            total += dp(x, y - 1, grid);
+        }
+        if (y < grid[0].size() - 1) {
+            total += dp(x, y + 1, grid);
+        }
+    } else if (x < grid.size() - 1) {
+        total += dp(x + 1, y, grid);
+    }
+
+    mem[x][y] = total;
+    return total;
+}
+
+const string part2(const string &input) {
+    vector<string> grid = split_string(input);
+    set<pair<int, int>> visited;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            mem[i][j] = EMPTY;
+        }
+    }
+
+    int sy = grid[0].find('S');
+    long long total = dp(0, sy, grid);
+    return to_string(total);
 }
 
 int main(int argc, char *argv[]) {
