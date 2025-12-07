@@ -23,10 +23,10 @@ void df(int x, int y, vector<string> &grid, set<pair<int, int>> &visited) {
         if (y > 0) {
             df(x, y - 1, grid, visited);
         }
-        if (y < grid.size() - 1) {
+        if (y < grid[0].size() - 1) {
             df(x, y + 1, grid, visited);
         }
-    } else if (x < grid[0].size() - 1) {
+    } else if (x < grid.size() - 1) {
         df(x + 1, y, grid, visited);
     }
 }
@@ -36,11 +36,10 @@ const string part1(const string &input) {
     set<pair<int, int>> visited;
 
     int sy = grid[0].find('S');
-
     df(0, sy, grid, visited);
 
     int total = 0;
-    for (auto [vx, vy] : visited) {
+    for (const auto &[vx, vy] : visited) {
         if (grid[vx][vy] == '^') {
             total++;
         }
