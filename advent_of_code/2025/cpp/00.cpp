@@ -11,7 +11,6 @@
 
 using namespace std;
 
-
 const string part1(const string &input) {
     vector<string> lines = split_string(input);
 

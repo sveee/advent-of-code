@@ -1,9 +1,8 @@
 
 DAY ?= $(shell date +%d)
-DAY_VALUE = $(shell printf "%02d" $(DAY))
 
-SRC = $(DAY_VALUE).cpp
-BIN = bin/$(DAY_VALUE)
+SRC = $(DAY).cpp
+BIN = bin/$(DAY)
 
 CXX = g++
 CXXFLAGS = --std=c++23 -O3
