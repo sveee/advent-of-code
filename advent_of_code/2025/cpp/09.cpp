@@ -18,10 +18,8 @@ struct Point {
 
     bool operator<(const Point &other) const {
         if (x != other.x) {
-            // Primary sorting criteria: Compare x-coordinates
             return x < other.x;
         }
-        // Secondary sorting criteria: If x-coordinates are equal, compare y-coordinates
         return y < other.y;
     }
 };
