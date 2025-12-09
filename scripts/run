@@ -13,10 +13,11 @@ from advent_of_code.solver import ProblemSolver
 @click.option('--day', '-d', default=datetime.now().day, help='Day of the problem')
 @click.option('--language', '-l', default=Language.PYTHON.value, help='Language used')
 @click.option('--session_id', '-s', help='AOC session ID')
-def main(year: int, day: int, language: str, session_id: str | None) -> None:
+@click.option('--live_output', '-o', help='Output live from compiled languages', is_flag=True)
+def main(year: int, day: int, language: str, session_id: str | None, live_output: bool) -> None:
     session_id = session_id or os.environ.get('AOC_SESSION')
     assert session_id is not None, 'AOC session ID must be provided'
-    solver = ProblemSolver(Language(language), year, day, session_id)
+    solver = ProblemSolver(Language(language), year, day, session_id, live_output)
     solver.solve()
 
 

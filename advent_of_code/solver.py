@@ -39,9 +39,14 @@ class ProblemSolver:
     RESET = '\033[0m'
 
     def __init__(
-        self, language: Language, year: int, day: int, session_id: str
+        self,
+        language: Language,
+        year: int,
+        day: int,
+        session_id: str,
+        live_output: bool,
     ) -> None:
-        self.runner: Runner = language_runner_map[language](year, day)
+        self.runner: Runner = language_runner_map[language](year, day, live_output)
         self.language = language
         self.year = year
         self.day = day

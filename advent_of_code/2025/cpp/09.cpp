@@ -24,6 +24,10 @@ struct Point {
     }
 };
 
+long long calculate_area(Point p1, Point p2) {
+    return (abs(p1.x - p2.x) + 1) * (abs(p1.y - p2.y) + 1);
+}
+
 const string part1(const string &input) {
     vector<string> lines = split_string(input);
 
@@ -38,9 +42,7 @@ const string part1(const string &input) {
     long long max_area = 0;
     for (int i = 0; i < points.size(); ++i) {
         for (int j = i + 1; j < points.size(); ++j) {
-            long long area =
-                (abs(points[i].x - points[j].x) + 1) * (abs(points[i].y - points[j].y) + 1);
-            max_area = max(max_area, area);
+            max_area = max(max_area, calculate_area(points[i], points[j]));
         }
     }
     return to_string(max_area);
@@ -117,9 +119,8 @@ const string part2(const string &input) {
     for (int i = 0; i < points.size(); ++i) {
         cout << i << endl;
         for (int j = i + 1; j < points.size(); ++j) {
-            long long area =
-                (abs(points[i].x - points[j].x) + 1) * (abs(points[i].y - points[j].y) + 1);
-            if (area <= max_area) {
+            long long candidate_area = calculate_area(points[i], points[j]);
+            if (candidate_area <= max_area) {
                 continue;
             }
             vector<Point> boundary = rectangle_boundary(points[i], points[j]);
@@ -133,7 +134,7 @@ const string part2(const string &input) {
             if (!all_inside) {
                 continue;
             }
-            max_area = area;
+            max_area = candidate_area;
         }
     }
 
