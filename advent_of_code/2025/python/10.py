@@ -43,5 +43,6 @@ def part2(text):
         res = linprog(
             c, A_eq=A_eq, b_eq=b_eq, bounds=(0, b_eq.max() + 1), integrality=1
         )
-        total += int(res.x.sum())
+        int_x = np.rint(res.x).astype(int)
+        total += int_x.sum()
     return total
