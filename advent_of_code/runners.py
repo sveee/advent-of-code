@@ -68,7 +68,7 @@ class CompiledRunner(Runner):
                 tmp_file.flush()
                 command = [self.binary_path, part.value, tmp_file.name]
                 result = run_with_live_output(command, live_output=self.live_output)
-            return result.strip().splitlines()[-1]
+            return result.splitlines()[-1]
         except subprocess.CalledProcessError as e:
             print(f'Error running binary: {e}')
             print(f'stderr: {e.stderr}')
