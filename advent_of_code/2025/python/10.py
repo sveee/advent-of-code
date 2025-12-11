@@ -1,6 +1,7 @@
 import numpy as np
 from itertools import product
 from scipy.optimize import linprog
+from functools import reduce
 
 
 def solve_diagram(lights, buttons):
@@ -44,5 +45,6 @@ def part2(text):
             c, A_eq=A_eq, b_eq=b_eq, bounds=(0, b_eq.max() + 1), integrality=1
         )
         int_x = np.rint(res.x).astype(int)
+        print(reduce(lambda x, y: x * y, b_eq))
         total += int_x.sum()
     return total
