@@ -91,24 +91,19 @@ Graph get_subgraph(const string &end, const Graph &graph, const Graph &reversed)
     return subgraph;
 }
 
+ll n_paths_between(const string &start, const string &end, const Graph &graph) {
+    Graph reversed = reverse_graph(graph);
+    Graph subgraph = get_subgraph(end, graph, reversed);
+    map<string, ll> memo;
+    return dfs(start, subgraph, memo);
+}
+
 const string part2(const string &input) {
     Graph graph = read_graph(input);
-    Graph reversed = reverse_graph(graph);
-    map<string, ll> memo;
-    Graph subgraph;
+    ll total = n_paths_between("svr", "fft", graph) * n_paths_between("fft", "dac", graph) *
+               n_paths_between("dac", "out", graph);
 
-    subgraph = get_subgraph("fft", graph, reversed);
-    memo.clear();
-    ll n_paths1 = dfs("svr", subgraph, memo);
-
-    subgraph = get_subgraph("dac", graph, reversed);
-    memo.clear();
-    ll n_paths2 = dfs("fft", subgraph, memo);
-
-    memo.clear();
-    ll n_paths3 = dfs("dac", graph, memo);
-
-    return to_string(n_paths1 * n_paths2 * n_paths3);
+    return to_string(total);
 }
 
 int main(int argc, char *argv[]) {
