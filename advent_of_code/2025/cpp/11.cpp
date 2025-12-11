@@ -60,7 +60,8 @@ Graph reverse_graph(const Graph &graph) {
     return reversed;
 }
 
-Graph get_subgraph(const string &end, const Graph &graph, const Graph &reversed) {
+Graph get_subgraph(const string &end, const Graph &graph) {
+    Graph reversed = reverse_graph(graph);
     set<string> subgraph_nodes{end};
     stack<string> stack;
     stack.push(end);
@@ -92,8 +93,7 @@ Graph get_subgraph(const string &end, const Graph &graph, const Graph &reversed)
 }
 
 ll n_paths_between(const string &start, const string &end, const Graph &graph) {
-    Graph reversed = reverse_graph(graph);
-    Graph subgraph = get_subgraph(end, graph, reversed);
+    Graph subgraph = get_subgraph(end, graph);
     map<string, ll> memo;
     return dfs(start, subgraph, memo);
 }
