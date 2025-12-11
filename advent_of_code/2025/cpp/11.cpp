@@ -16,18 +16,21 @@ using namespace std;
 typedef long long ll;
 typedef map<string, vector<string>> Graph;
 
-ll dfs(const string &node, Graph &graph, map<string, ll> &memo) {
-    if (memo.contains(node)) {
-        return memo[node];
+ll dfs(const string &start, const string &end, Graph &graph, map<string, ll> &memo) {
+    if (memo.contains(start)) {
+        return memo[start];
     }
-    if (!graph.contains(node) || graph[node].empty()) {
+    if (start == end) {
         return 1;
     }
-    ll total = 0;
-    for (const string &neighbor : graph[node]) {
-        total += dfs(neighbor, graph, memo);
+    if (!graph.contains(start) || graph[start].empty()) {
+        return 0;
     }
-    memo[node] = total;
+    ll total = 0;
+    for (const string &neighbor : graph[start]) {
+        total += dfs(neighbor, end, graph, memo);
+    }
+    memo[start] = total;
     return total;
 }
 
@@ -47,61 +50,19 @@ Graph read_graph(const string &input) {
 const string part1(const string &input) {
     Graph graph = read_graph(input);
     map<string, ll> memo;
-    return to_string(dfs("you", graph, memo));
-}
-
-Graph reverse_graph(const Graph &graph) {
-    Graph reversed;
-    for (const auto &[node, neighbors] : graph) {
-        for (const string &neighbor : neighbors) {
-            reversed[neighbor].push_back(node);
-        }
-    }
-    return reversed;
-}
-
-Graph get_subgraph(const string &end, const Graph &graph) {
-    Graph reversed = reverse_graph(graph);
-    set<string> subgraph_nodes{end};
-    stack<string> stack;
-    stack.push(end);
-    while (!stack.empty()) {
-        string node = stack.top();
-        stack.pop();
-        if (!reversed.contains(node)) {
-            continue;
-        }
-        for (const string &neighbor : reversed.at(node)) {
-            if (!subgraph_nodes.contains(neighbor)) {
-                subgraph_nodes.insert(neighbor);
-                stack.push(neighbor);
-            }
-        }
-    }
-
-    Graph subgraph;
-    for (const string &node : subgraph_nodes) {
-        if (graph.contains(node)) {
-            for (const string &neighbor : graph.at(node)) {
-                if (subgraph_nodes.contains(neighbor)) {
-                    subgraph[node].push_back(neighbor);
-                }
-            }
-        }
-    }
-    return subgraph;
-}
-
-ll n_paths_between(const string &start, const string &end, const Graph &graph) {
-    Graph subgraph = get_subgraph(end, graph);
-    map<string, ll> memo;
-    return dfs(start, subgraph, memo);
+    return to_string(dfs("you", "out", graph, memo));
 }
 
 const string part2(const string &input) {
     Graph graph = read_graph(input);
-    ll total = n_paths_between("svr", "fft", graph) * n_paths_between("fft", "dac", graph) *
-               n_paths_between("dac", "out", graph);
+
+    ll total = 1;
+    map<string, ll> memo;
+    total *= dfs("svr", "fft", graph, memo);
+    memo.clear();
+    total *= dfs("fft", "dac", graph, memo);
+    memo.clear();
+    total *= dfs("dac", "out", graph, memo);
 
     return to_string(total);
 }
