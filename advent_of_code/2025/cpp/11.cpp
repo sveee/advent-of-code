@@ -16,19 +16,25 @@ using namespace std;
 typedef long long ll;
 typedef map<string, vector<string>> Graph;
 
-ll dfs(const string &start, const string &end, Graph &graph, map<string, ll> &memo) {
+ll dfs(const string &start, const string &end, Graph &graph, map<string, ll> &memo,
+       set<string> path) {
     if (memo.contains(start)) {
         return memo[start];
     }
     if (start == end) {
         return 1;
     }
+    if (path.contains(start)) {
+        return 0;
+    }
     if (!graph.contains(start) || graph[start].empty()) {
         return 0;
     }
     ll total = 0;
     for (const string &neighbor : graph[start]) {
-        total += dfs(neighbor, end, graph, memo);
+        set<string> new_path = path;
+        new_path.insert(start);
+        total += dfs(neighbor, end, graph, memo, new_path);
     }
     memo[start] = total;
     return total;
@@ -50,7 +56,7 @@ Graph read_graph(const string &input) {
 const string part1(const string &input) {
     Graph graph = read_graph(input);
     map<string, ll> memo;
-    return to_string(dfs("you", "out", graph, memo));
+    return to_string(dfs("you", "out", graph, memo, {}));
 }
 
 const string part2(const string &input) {
@@ -58,11 +64,11 @@ const string part2(const string &input) {
 
     ll total = 1;
     map<string, ll> memo;
-    total *= dfs("svr", "fft", graph, memo);
+    total *= dfs("svr", "fft", graph, memo, {});
     memo.clear();
-    total *= dfs("fft", "dac", graph, memo);
+    total *= dfs("fft", "dac", graph, memo, {});
     memo.clear();
-    total *= dfs("dac", "out", graph, memo);
+    total *= dfs("dac", "out", graph, memo, {});
 
     return to_string(total);
 }
